@@ -1,5 +1,6 @@
 package checkers
 
+import "fmt"
 import "strconv"
 
 type Space struct {
@@ -8,35 +9,74 @@ type Space struct {
 }
 
 type Piece struct {
-	color string
-	space Space
+	Color string
+	Space Space
 }
 
 type Board struct {
-	Pieces [24]Piece
+	Pieces []Piece
+}
+
+func dummy() {
+	fmt.Println()
 }
 
 func NewGameBoard() *Board {
-	board := new(Board)
-	index := 0
+	board := &Board{make([]Piece, 24)}
+	pieceIndex := 0
 
-	for i := 1; i < 9; i++ {
-		for j := 97; j < 105; j++ {
-			color := ""
-			if index < 12 {
-				color = "white"
-			} else {
-				color = "black"
-			}
+	for i := 0; i < 64; i++ {
+		created := board.createPieceAtIndex(pieceIndex, i)
 
-			board.Pieces[index] = Piece{color: color, space: Space{File: string(j), Rank: strconv.Itoa(i)}}
+		if created {
+			pieceIndex += 1
 		}
 	}
 
 	return board
 }
 
+func (board *Board) createPieceAtIndex(pieceIndex int, spaceIndex int) bool {
+	board.Pieces[pieceIndex] = initialPieceAtIndex(spaceIndex)
+
+	return pieceIndex < 23
+}
+
+func (board *Board) GetPieceAt(space Space) Piece {
+	for _, piece := range board.Pieces {
+		// fmt.Println(piece, piece.Space, space)
+
+		if sameSpace(piece.Space, space) {
+			return piece
+		}
+	}
+
+	return Piece{Color: "NOOOOOOOOOOOOOOOOO!!!", Space: Space{File: "", Rank: ""}}
+}
+
+func sameSpace(pieceSpace Space, targetSpace Space) bool {
+	// fmt.Println(pieceSpace.File, targetSpace.File)
+	if pieceSpace.File == targetSpace.File {
+		return pieceSpace.Rank == targetSpace.Rank
+	}
+
+	return false
+}
+
 // func (board *Board) MovesFor(space Space) []string {
 // 	var strings []string
 // 	return strings
 // }
+
+func initialPieceAtIndex(index int) Piece {
+	file := string((index % 8) + 97)
+	rank := strconv.Itoa((index / 8) + 1)
+	color := "black"
+
+	if index < 24 && index % 2 == 0 {
+		color = "white"
+	}
+
+	// fmt.Println(index, ":", rank, file, ":", color)
+	return Piece{Color: color, Space: Space{File: file, Rank: rank}}
+}
