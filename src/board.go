@@ -26,7 +26,7 @@ func NewGameBoard() *Board {
 	pieceIndex := 0
 
 	for i := 0; i < 64; i++ {
-		created := board.createPieceAtIndex(pieceIndex, i)
+		_, created := board.createPieceAtIndex(pieceIndex, i)
 
 		if created && pieceIndex < 23 {
 			pieceIndex += 1
@@ -36,14 +36,13 @@ func NewGameBoard() *Board {
 	return board
 }
 
-func (board *Board) createPieceAtIndex(pieceIndex int, spaceIndex int) bool {
-	initialPiece, ok := initialPieceAtIndex(spaceIndex)
-
-	if ok {
+func (board *Board) createPieceAtIndex(pieceIndex int, spaceIndex int) (Piece, bool) {
+	if initialPiece, ok := initialPieceAtIndex(spaceIndex); ok {
 		board.Pieces[pieceIndex] = initialPiece
+		return initialPiece, true
 	}
 
-	return ok
+	return Piece{}, false
 }
 
 func (board *Board) GetPieceAt(space Space) Piece {
@@ -57,36 +56,37 @@ func (board *Board) GetPieceAt(space Space) Piece {
 }
 
 func sameSpace(pieceSpace Space, targetSpace Space) bool {
-	if pieceSpace.File == targetSpace.File {
-		return pieceSpace.Rank == targetSpace.Rank
-	}
-
-	return false
+	return pieceSpace.Rank == targetSpace.Rank &&
+		pieceSpace.File == targetSpace.File
 }
 
 func initialPieceAtIndex(index int) (Piece, bool) {
 	if index % 2 == 1 {
 		return Piece{}, false
 	} else {
-		rank := (index / 8) + 1
-		file := ""
-
-		if rank % 2 == 1 {
-			file = string((index % 8) + 97)
-		} else {
-			file = string((index % 8) + 98)
-		}
-
-		color := ""
-
-		if index < 24 {
-			color = "white"
-		} else if index > 39 {
-			color = "black"
-		} else {
-			return Piece{}, false
-		}
-
-		return Piece{Color: color, Space: Space{File: file, Rank: strconv.Itoa(rank)}}, true
+		return Piece{Color: colorFor(index), Space: spaceFor(index)}, true
 	}
+}
+
+func colorFor(index int) string {
+	if index < 24 {
+		return "white"
+	} else if index > 39 {
+		return "black"
+	} else {
+		return ""
+	}
+}
+
+func spaceFor(index int) Space {
+	rank := (index / 8) + 1
+	file := ""
+
+	if rank % 2 == 1 {
+		file = string((index % 8) + 97)
+	} else {
+		file = string((index % 8) + 98)
+	}
+
+	return Space{File: file, Rank: strconv.Itoa(rank)}
 }

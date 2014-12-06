@@ -9,9 +9,9 @@ import (
 
 var _ = Describe("a board", func() {
 	var board = NewGameBoard()
+	fmt.Println()
 
 	It("has pieces", func() {
-		fmt.Println()
 		Expect(len(board.Pieces)).To(Equal(24))
 	})
 
