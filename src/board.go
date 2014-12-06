@@ -28,7 +28,7 @@ func NewGameBoard() *Board {
 	for i := 0; i < 64; i++ {
 		created := board.createPieceAtIndex(pieceIndex, i)
 
-		if created {
+		if created && pieceIndex < 23 {
 			pieceIndex += 1
 		}
 	}
@@ -37,15 +37,17 @@ func NewGameBoard() *Board {
 }
 
 func (board *Board) createPieceAtIndex(pieceIndex int, spaceIndex int) bool {
-	board.Pieces[pieceIndex] = initialPieceAtIndex(spaceIndex)
+	initialPiece, ok := initialPieceAtIndex(spaceIndex)
 
-	return pieceIndex < 23
+	if ok {
+		board.Pieces[pieceIndex] = initialPiece
+	}
+
+	return ok
 }
 
 func (board *Board) GetPieceAt(space Space) Piece {
 	for _, piece := range board.Pieces {
-		// fmt.Println(piece, piece.Space, space)
-
 		if sameSpace(piece.Space, space) {
 			return piece
 		}
@@ -55,7 +57,6 @@ func (board *Board) GetPieceAt(space Space) Piece {
 }
 
 func sameSpace(pieceSpace Space, targetSpace Space) bool {
-	// fmt.Println(pieceSpace.File, targetSpace.File)
 	if pieceSpace.File == targetSpace.File {
 		return pieceSpace.Rank == targetSpace.Rank
 	}
@@ -63,20 +64,29 @@ func sameSpace(pieceSpace Space, targetSpace Space) bool {
 	return false
 }
 
-// func (board *Board) MovesFor(space Space) []string {
-// 	var strings []string
-// 	return strings
-// }
+func initialPieceAtIndex(index int) (Piece, bool) {
+	if index % 2 == 1 {
+		return Piece{}, false
+	} else {
+		rank := (index / 8) + 1
+		file := ""
 
-func initialPieceAtIndex(index int) Piece {
-	file := string((index % 8) + 97)
-	rank := strconv.Itoa((index / 8) + 1)
-	color := "black"
+		if rank % 2 == 1 {
+			file = string((index % 8) + 97)
+		} else {
+			file = string((index % 8) + 98)
+		}
 
-	if index < 24 && index % 2 == 0 {
-		color = "white"
+		color := ""
+
+		if index < 24 {
+			color = "white"
+		} else if index > 39 {
+			color = "black"
+		} else {
+			return Piece{}, false
+		}
+
+		return Piece{Color: color, Space: Space{File: file, Rank: strconv.Itoa(rank)}}, true
 	}
-
-	// fmt.Println(index, ":", rank, file, ":", color)
-	return Piece{Color: color, Space: Space{File: file, Rank: rank}}
 }

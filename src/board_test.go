@@ -16,20 +16,7 @@ var _ = Describe("a board", func() {
 	})
 
 	It("gets the piece at a space", func() {
-		for x,y := range board.Pieces {
-			fmt.Println(x, y)
-		}
-
-		Expect(board.GetPieceAt(Space{File: "g", Rank: "3"}).Color).To(Equal("black"))
-		Expect(board.GetPieceAt(Space{File: "h", Rank: "8"}).Color).To(Equal("white"))
+		Expect(board.GetPieceAt(Space{File: "g", Rank: "3"}).Color).To(Equal("white"))
+		Expect(board.GetPieceAt(Space{File: "h", Rank: "8"}).Color).To(Equal("black"))
 	})
-
-	// It("knows where a piece can move", func() {
-	// 	space := Space{File: "g", Rank: "3"}
-	// 	moves := board.MovesFor(space)
-	// 	Expect(len(moves)).To(Equal(2))
-
-	// 	Expect(moves[0]).To(Equal("f4"))
-	// 	Expect(moves[1]).To(Equal("h4"))
-	// })
 })
