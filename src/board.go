@@ -59,7 +59,6 @@ func (board *Board) movesForSpace(space Space, color string) []Space {
 	if color == "white" {
 		nextRank = space.Rank + 1
 	} else {
-		fmt.Println()
 		nextRank = space.Rank - 1
 	}
 
@@ -107,10 +106,13 @@ func sameSpace(pieceSpace Space, targetSpace Space) bool {
 }
 
 func initialPieceAtIndex(index int) (Piece, bool) {
-	if index % 2 == 1 {
+	color := colorFor(index)
+
+	if index % 2 == 1 || color == "" {
 		return Piece{}, false
 	} else {
-		return Piece{Color: colorFor(index), Space: spaceFor(index)}, true
+		piece := Piece{Color: color, Space: spaceFor(index)}
+		return piece, true
 	}
 }
 
