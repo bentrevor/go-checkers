@@ -21,13 +21,13 @@ func dummy() {
 }
 
 func NewGameBoard() *Board {
-	board := &Board{make([]Piece, 24)}
+	board := &Board{make([]Piece, 24, 32)}
 	pieceIndex := 0
 
 	for i := 0; i < 64; i++ {
 		_, created := board.createPieceAtIndex(pieceIndex, i)
 
-		if created && pieceIndex < 23 {
+		if created && pieceIndex < cap(board.Pieces) {
 			pieceIndex += 1
 		}
 	}
@@ -45,6 +45,15 @@ func (board *Board) GetPieceAt(space Space) Piece {
 	return Piece{}
 }
 
+func (board *Board) PlacePiece(piece Piece) (Piece, bool) {
+	if board.GetPieceAt(piece.Space).Color == "" {
+		board.addPiece(piece)
+		return piece, true
+	} else {
+		return piece, false
+	}
+}
+
 func (board *Board) MovesForPiece(piece Piece) []Space {
 	space := piece.Space
 
@@ -52,6 +61,10 @@ func (board *Board) MovesForPiece(piece Piece) []Space {
 }
 
 // private
+
+func (board *Board) addPiece(piece Piece) {
+	board.Pieces = append(board.Pieces, piece)
+}
 
 func (board *Board) movesForSpace(space Space, color string) []Space {
 	moves := []Space{}
@@ -75,6 +88,16 @@ func (board *Board) movesForSpace(space Space, color string) []Space {
 	return moves
 }
 
+func (board *Board) createPieceAtIndex(pieceIndex int, spaceIndex int) (Piece, bool) {
+	if initialPiece, ok := initialPieceAtIndex(spaceIndex); ok {
+		board.Pieces[pieceIndex] = initialPiece
+		// fmt.Println("\t(putting piece on board)")
+		return initialPiece, true
+	}
+
+	return Piece{}, false
+}
+
 func notOnLeftEdge(space Space) bool {
 	return space.File != "a"
 }
@@ -89,15 +112,6 @@ func incFile(file string) string {
 
 func decFile(file string) string {
 	return string(file[0] - 1)
-}
-
-func (board *Board) createPieceAtIndex(pieceIndex int, spaceIndex int) (Piece, bool) {
-	if initialPiece, ok := initialPieceAtIndex(spaceIndex); ok {
-		board.Pieces[pieceIndex] = initialPiece
-		return initialPiece, true
-	}
-
-	return Piece{}, false
 }
 
 func sameSpace(pieceSpace Space, targetSpace Space) bool {

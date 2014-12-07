@@ -55,6 +55,20 @@ var _ = Describe("a board", func() {
 		}
 	})
 
+	It("can place a piece", func() {
+		emptySpace := Space{File: "e", Rank: 5}
+		occupiedSpace := Space{File: "e", Rank: 7}
+
+		piece1 := Piece{Color: "white", Space: emptySpace}
+		piece2 := Piece{Color: "white", Space: occupiedSpace}
+
+		_, createdPieceAtE5 := board.PlacePiece(piece1)
+		_, createdPieceAtE7 := board.PlacePiece(piece2)
+
+		Expect(createdPieceAtE5).To(BeTrue())
+		Expect(createdPieceAtE7).To(BeFalse())
+	})
+
 	It("knows where a piece can move", func() {
 		whitePiece := board.GetPieceAt(Space{File: "g", Rank: 3})
 		blackPiece := board.GetPieceAt(Space{File: "h", Rank: 6})
