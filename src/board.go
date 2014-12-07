@@ -1,10 +1,9 @@
 package checkers
 
 import "fmt"
-import "strconv"
 
 type Space struct {
-	Rank string
+	Rank int
 	File string
 }
 
@@ -36,15 +35,6 @@ func NewGameBoard() *Board {
 	return board
 }
 
-func (board *Board) createPieceAtIndex(pieceIndex int, spaceIndex int) (Piece, bool) {
-	if initialPiece, ok := initialPieceAtIndex(spaceIndex); ok {
-		board.Pieces[pieceIndex] = initialPiece
-		return initialPiece, true
-	}
-
-	return Piece{}, false
-}
-
 func (board *Board) GetPieceAt(space Space) Piece {
 	for _, piece := range board.Pieces {
 		if sameSpace(piece.Space, space) {
@@ -52,7 +42,63 @@ func (board *Board) GetPieceAt(space Space) Piece {
 		}
 	}
 
-	return Piece{Color: "NOOOOOOOOOOOOOOOOO!!!", Space: Space{File: "", Rank: ""}}
+	return Piece{}
+}
+
+func (board *Board) MovesForPiece(piece Piece) []Space {
+	space := piece.Space
+
+	return board.movesForSpace(space, piece.Color)
+}
+
+// private
+
+func (board *Board) movesForSpace(space Space, color string) []Space {
+	moves := []Space{}
+	nextRank := 0
+	if color == "white" {
+		nextRank = space.Rank + 1
+	} else {
+		fmt.Println()
+		nextRank = space.Rank - 1
+	}
+
+	if notOnLeftEdge(space) {
+		leftFile := decFile(space.File)
+		moves = append(moves, Space{File: leftFile, Rank: nextRank})
+	}
+
+	if notOnRightEdge(space) {
+		rightFile := incFile(space.File)
+		moves = append(moves, Space{File: rightFile, Rank: nextRank})
+	}
+
+	return moves
+}
+
+func notOnLeftEdge(space Space) bool {
+	return space.File != "a"
+}
+
+func notOnRightEdge(space Space) bool {
+	return space.File != "h"
+}
+
+func incFile(file string) string {
+	return string(file[0] + 1)
+}
+
+func decFile(file string) string {
+	return string(file[0] - 1)
+}
+
+func (board *Board) createPieceAtIndex(pieceIndex int, spaceIndex int) (Piece, bool) {
+	if initialPiece, ok := initialPieceAtIndex(spaceIndex); ok {
+		board.Pieces[pieceIndex] = initialPiece
+		return initialPiece, true
+	}
+
+	return Piece{}, false
 }
 
 func sameSpace(pieceSpace Space, targetSpace Space) bool {
@@ -88,5 +134,5 @@ func spaceFor(index int) Space {
 		file = string((index % 8) + 98)
 	}
 
-	return Space{File: file, Rank: strconv.Itoa(rank)}
+	return Space{File: file, Rank: rank}
 }
