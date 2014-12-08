@@ -81,15 +81,21 @@ var _ = Describe("a board", func() {
 		Expect(board.MovesForPiece(blackPiece)).To(Equal([]Space{blackMove}))
 	})
 
-	XIt("knows where a piece can jump", func() {
-		whitePiece := board.GetPieceAt(Space{File: "g", Rank: 3})
-		blackPiece := board.GetPieceAt(Space{File: "h", Rank: 6})
+	It("knows where a piece can jump", func() {
+		d6 := board.GetPieceAt(Space{File: "d", Rank: 6})
+		f6 := board.GetPieceAt(Space{File: "f", Rank: 6})
+		emptySpace := Space{File: "e", Rank: 5}
+		whitePiece := Piece{Color: "white", Space: emptySpace}
 
-		whiteMove1 := Space{File: "f", Rank: 4}
-		whiteMove2 := Space{File: "h", Rank: 4}
-		blackMove := Space{File: "g", Rank: 5}
+		board.PlacePiece(whitePiece)
 
-		Expect(board.MovesForPiece(whitePiece)).To(Equal([]Space{whiteMove1, whiteMove2}))
-		Expect(board.MovesForPiece(blackPiece)).To(Equal([]Space{blackMove}))
+		captureMoveForD6 := Space{File: "f", Rank: 4}
+		captureMoveForF6 := Space{File: "d", Rank: 4}
+
+		d6Moves := board.MovesForPiece(d6)
+		f6Moves := board.MovesForPiece(f6)
+
+		Expect(Includes(d6Moves, captureMoveForD6)).To(BeTrue())
+		Expect(Includes(f6Moves, captureMoveForF6)).To(BeTrue())
 	})
 })

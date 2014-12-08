@@ -60,6 +60,16 @@ func (board *Board) MovesForPiece(piece Piece) []Space {
 	return board.movesForSpace(space, piece.Color)
 }
 
+func Includes(moves []Space, move Space) bool {
+	for _, space := range moves {
+		if sameSpace(space, move) {
+			return true
+		}
+	}
+
+	return false
+}
+
 // private
 
 func (board *Board) addPiece(piece Piece) {
@@ -77,21 +87,62 @@ func (board *Board) movesForSpace(space Space, color string) []Space {
 
 	if notOnLeftEdge(space) {
 		leftFile := decFile(space.File)
-		moves = append(moves, Space{File: leftFile, Rank: nextRank})
+		targetSpace := Space{File: leftFile, Rank: nextRank}
+		if nextMove, ok := board.getNextMove(space, targetSpace); ok {
+			moves = append(moves, nextMove)
+		}
 	}
 
 	if notOnRightEdge(space) {
 		rightFile := incFile(space.File)
-		moves = append(moves, Space{File: rightFile, Rank: nextRank})
+		targetSpace := Space{File: rightFile, Rank: nextRank}
+
+		if nextMove, ok := board.getNextMove(space, targetSpace); ok {
+			moves = append(moves, nextMove)
+		}
 	}
 
 	return moves
 }
 
+func (board *Board) getNextMove(startingSpace Space, targetSpace Space) (Space, bool) {
+	// fmt.Println("target space: ", targetSpace, "\npiece: ", board.GetPieceAt(targetSpace), "\n\n")
+	if board.GetPieceAt(targetSpace).Color == "" {
+		return targetSpace, true
+	} else {
+		nextSpace := getNextSpace(startingSpace, targetSpace)
+		if board.GetPieceAt(nextSpace).Color == "" {
+			return nextSpace, true
+		} else {
+			return Space{}, false
+		}
+	}
+}
+
+func getNextSpace(startingSpace Space, targetSpace Space) Space {
+	increasingRank := startingSpace.Rank < targetSpace.Rank
+	increasingFile := startingSpace.File[0] < targetSpace.File[0]
+	nextRank := 0
+	nextFile := ""
+
+	if increasingRank {
+		nextRank = targetSpace.Rank + 1
+	} else {
+		nextRank = targetSpace.Rank - 1
+	}
+
+	if increasingFile {
+		nextFile = string(targetSpace.File[0] + 1)
+	} else {
+		nextFile = string(targetSpace.File[0] - 1)
+	}
+
+	return Space{File: nextFile, Rank: nextRank}
+}
+
 func (board *Board) createPieceAtIndex(pieceIndex int, spaceIndex int) (Piece, bool) {
 	if initialPiece, ok := initialPieceAtIndex(spaceIndex); ok {
 		board.Pieces[pieceIndex] = initialPiece
-		// fmt.Println("\t(putting piece on board)")
 		return initialPiece, true
 	}
 
