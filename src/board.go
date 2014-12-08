@@ -70,6 +70,30 @@ func Includes(moves []Space, move Space) bool {
 	return false
 }
 
+func (board *Board) ConsolePrint() {
+	spaces := []Space{}
+
+	for _, piece := range board.Pieces {
+		spaces = append(spaces, piece.Space)
+	}
+
+	for i := 0; i < 64; i++ {
+		space := SpaceFor(i)
+		piece := board.GetPieceAt(space)
+
+		if i % 2 == 1 || piece.Color == "" {
+			fmt.Print("..")
+		} else {
+			fmt.Print(piece.Space.File)
+			fmt.Print(piece.Space.Rank)
+		}
+		if i % 8 == 7 {
+			fmt.Println("==done with row \t%s==", space)
+		}
+	}
+	return
+}
+
 // private
 
 func (board *Board) addPiece(piece Piece) {
@@ -106,7 +130,6 @@ func (board *Board) movesForSpace(space Space, color string) []Space {
 }
 
 func (board *Board) getNextMove(startingSpace Space, targetSpace Space) (Space, bool) {
-	// fmt.Println("target space: ", targetSpace, "\npiece: ", board.GetPieceAt(targetSpace), "\n\n")
 	if board.GetPieceAt(targetSpace).Color == "" {
 		return targetSpace, true
 	} else {
@@ -176,7 +199,7 @@ func initialPieceAtIndex(index int) (Piece, bool) {
 	if index % 2 == 1 || color == "" {
 		return Piece{}, false
 	} else {
-		piece := Piece{Color: color, Space: spaceFor(index)}
+		piece := Piece{Color: color, Space: SpaceFor(index)}
 		return piece, true
 	}
 }
@@ -191,7 +214,7 @@ func colorFor(index int) string {
 	}
 }
 
-func spaceFor(index int) Space {
+func SpaceFor(index int) Space {
 	rank := (index / 8) + 1
 	file := ""
 
@@ -200,6 +223,8 @@ func spaceFor(index int) Space {
 	} else {
 		file = string((index % 8) + 98)
 	}
+
+	// fmt.Println("\n\n", index, file, rank, "\n\n")
 
 	return Space{File: file, Rank: rank}
 }

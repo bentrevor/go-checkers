@@ -16,6 +16,8 @@ var _ = Describe("a board", func() {
 	})
 
 	It("gets the piece at a space", func() {
+		// board.ConsolePrint()
+
 		whiteSpaces := []Space{
 			Space{File: "a", Rank: 1},
 			Space{File: "c", Rank: 1},
@@ -79,6 +81,15 @@ var _ = Describe("a board", func() {
 
 		Expect(board.MovesForPiece(whitePiece)).To(Equal([]Space{whiteMove1, whiteMove2}))
 		Expect(board.MovesForPiece(blackPiece)).To(Equal([]Space{blackMove}))
+	})
+
+	It("knows the space for an index", func() {
+		Expect(SpaceFor(0)).To(Equal(Space{File: "a", Rank: 1}))
+		Expect(SpaceFor(1)).To(Equal(Space{File: "b", Rank: 1}))
+		Expect(SpaceFor(7)).To(Equal(Space{File: "h", Rank: 1}))
+		Expect(SpaceFor(8)).To(Equal(Space{File: "a", Rank: 2}))
+		Expect(SpaceFor(15)).To(Equal(Space{File: "b", Rank: 2}))
+		Expect(SpaceFor(63)).To(Equal(Space{File: "h", Rank: 8}))
 	})
 
 	It("knows where a piece can jump", func() {
