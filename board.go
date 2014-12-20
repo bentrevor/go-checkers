@@ -16,44 +16,14 @@ type Board struct {
 	Pieces []Piece
 }
 
-type Move struct {
-	StartingSpace Space
-	TargetSpace Space
-}
-
-func dummy() {
+func dummy() { // no more "unused import 'fmt'"
 	fmt.Println()
 }
 
 func NewGameBoard() *Board {
 	board := &Board{make([]Piece, 24, 80)}
-	pieceIndex := 0
-
-	for i := 0; i < 64; i++ {
-		_, created := board.createPieceAtIndex(pieceIndex, i)
-
-		if created && pieceIndex < cap(board.Pieces) {
-			pieceIndex += 1
-		}
-	}
-
+	board.createInitialPieces()
 	return board
-}
-
-func (board *Board) getNextMove(startingSpace Space, targetSpace Space) (Move, bool) {
-	if board.GetPieceAt(targetSpace).Color == "" {
-		move := Move{StartingSpace: startingSpace, TargetSpace: targetSpace}
-		return move, true
-	} else {
-		nextSpace := getNextSpace(startingSpace, targetSpace)
-
-		if board.GetPieceAt(nextSpace).Color == "" {
-			move := Move{StartingSpace: startingSpace, TargetSpace: nextSpace}
-			return move, true
-		} else {
-			return Move{}, false
-		}
-	}
 }
 
 func (board *Board) GetPieceAt(space Space) Piece {
@@ -75,12 +45,6 @@ func (board *Board) PlacePiece(piece Piece) (Piece, bool) {
 	}
 }
 
-func (board *Board) MovesForPiece(piece Piece) []Move {
-	space := piece.Space
-
-	return board.movesForSpace(space, piece.Color)
-}
-
 func (board *Board) ConsolePrint() {
 	fmt.Println()
 	spaces := []Space{}
@@ -97,11 +61,9 @@ func (board *Board) ConsolePrint() {
 			fmt.Print("|_")
 		} else {
 			fmt.Printf("|%c", piece.Color[0])
-			// fmt.Print(piece.Space.Rank)
 		}
 		if i % 8 == 7 {
 			fmt.Println("|")
-			// fmt.Println("==done with row \t%s==", space)
 		}
 	}
 	fmt.Println()
@@ -110,40 +72,19 @@ func (board *Board) ConsolePrint() {
 
 // private
 
-func (board *Board) addPiece(piece Piece) {
-	board.Pieces = append(board.Pieces, piece)
-}
+func (board *Board) createInitialPieces() {
+	pieceIndex := 0
 
-func (board *Board) movesForSpace(startingSpace Space, color string) []Move {
-	moves := []Move{}
-	nextRank := 0
-	if color == "white" {
-		nextRank = startingSpace.Rank + 1
-	} else {
-		nextRank = startingSpace.Rank - 1
-	}
+	for i := 0; i < 64; i++ {
+		_, created := board.createInitialPieceAtIndex(pieceIndex, i)
 
-	if notOnLeftEdge(startingSpace) {
-		leftFile := decFile(startingSpace.File)
-		targetSpace := Space{File: leftFile, Rank: nextRank}
-		if nextMove, ok := board.getNextMove(startingSpace, targetSpace); ok {
-			moves = append(moves, nextMove)
+		if created && pieceIndex < cap(board.Pieces) {
+			pieceIndex += 1
 		}
 	}
-
-	if notOnRightEdge(startingSpace) {
-		rightFile := incFile(startingSpace.File)
-		targetSpace := Space{File: rightFile, Rank: nextRank}
-
-		if nextMove, ok := board.getNextMove(startingSpace, targetSpace); ok {
-			moves = append(moves, nextMove)
-		}
-	}
-
-	return moves
 }
 
-func (board *Board) createPieceAtIndex(pieceIndex int, spaceIndex int) (Piece, bool) {
+func (board *Board) createInitialPieceAtIndex(pieceIndex int, spaceIndex int) (Piece, bool) {
 	if initialPiece, ok := initialPieceAtIndex(spaceIndex); ok {
 		board.Pieces[pieceIndex] = initialPiece
 		return initialPiece, true
@@ -162,4 +103,8 @@ func initialPieceAtIndex(index int) (Piece, bool) {
 		piece := Piece{Color: pieceColor, Space: SpaceForIndex(index)}
 		return piece, true
 	}
+}
+
+func (board *Board) addPiece(piece Piece) {
+	board.Pieces = append(board.Pieces, piece)
 }
