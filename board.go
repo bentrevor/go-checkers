@@ -20,15 +20,19 @@ func dummy() { // no more "unused import 'fmt'"
 	fmt.Println()
 }
 
+func NewEmptyBoard() *Board {
+	return &Board{make([]Piece, 24, 32)}
+}
+
 func NewGameBoard() *Board {
-	board := &Board{make([]Piece, 24, 80)}
+	board := NewEmptyBoard()
 	board.createInitialPieces()
 	return board
 }
 
-func (board *Board) GetPieceAt(space Space) Piece {
+func (board *Board) GetPieceAtSpace(space Space) Piece {
 	for _, piece := range board.Pieces {
-		if sameSpace(piece.Space, space) {
+		if SameSpace(piece.Space, space) {
 			return piece
 		}
 	}
@@ -37,7 +41,7 @@ func (board *Board) GetPieceAt(space Space) Piece {
 }
 
 func (board *Board) PlacePiece(piece Piece) (Piece, bool) {
-	if board.GetPieceAt(piece.Space).Color == "" {
+	if board.GetPieceAtSpace(piece.Space).Color == "" {
 		board.addPiece(piece)
 		return piece, true
 	} else {
@@ -55,7 +59,7 @@ func (board *Board) ConsolePrint() {
 
 	for i := 0; i < 64; i++ {
 		space := SpaceForIndex(i)
-		piece := board.GetPieceAt(space)
+		piece := board.GetPieceAtSpace(space)
 
 		if piece.Color == "" {
 			fmt.Print("|_")

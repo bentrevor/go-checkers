@@ -45,11 +45,11 @@ func TestBoard_SetsTheInitialPieceLayout(t *testing.T) {
 	}
 
 	for _, space := range whiteSpaces {
-		assertEquals(t, "white", board.GetPieceAt(space).Color)
+		assertEquals(t, "white", board.GetPieceAtSpace(space).Color)
 	}
 
 	for _, space := range blackSpaces {
-		assertEquals(t, "black", board.GetPieceAt(space).Color)
+		assertEquals(t, "black", board.GetPieceAtSpace(space).Color)
 	}
 }
 
@@ -69,8 +69,8 @@ func TestBoard_CanPlaceAPiece(t *testing.T) {
 }
 
 func TestBoard_KnowsWhereAPieceCanMove(t *testing.T) {
-	whitePiece := board.GetPieceAt(Space{File: "g", Rank: 3})
-	blackPiece := board.GetPieceAt(Space{File: "h", Rank: 6})
+	whitePiece := board.GetPieceAtSpace(Space{File: "g", Rank: 3})
+	blackPiece := board.GetPieceAtSpace(Space{File: "h", Rank: 6})
 
 	whiteMove1 := Space{File: "f", Rank: 4}
 	whiteMove2 := Space{File: "h", Rank: 4}
@@ -90,9 +90,9 @@ func TestBoard_KnowsWhereAPieceCanMove(t *testing.T) {
 
 func TestBoard_KnowsWhereAPieceCanJump(t *testing.T) {
 	d6 := Space{File: "d", Rank: 6}
-	d6Piece := board.GetPieceAt(d6)
+	d6Piece := board.GetPieceAtSpace(d6)
 	f6 := Space{File: "f", Rank: 6}
-	f6Piece := board.GetPieceAt(f6)
+	f6Piece := board.GetPieceAtSpace(f6)
 
 	emptySpace := Space{File: "e", Rank: 5}
 	whitePiece := Piece{Color: "white", Space: emptySpace}

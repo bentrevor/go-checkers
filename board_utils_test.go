@@ -3,7 +3,12 @@ package checkers_test
 import (
 	. "github.com/bentrevor/checkers"
 	"testing"
+	"fmt"
 )
+
+func useFmt() {
+	fmt.Print()
+}
 
 func TestBoardUtils_KnowsTheColorOfASpace(t *testing.T) {
 	assertEquals(t, SpaceColorForIndex(0), "black")
@@ -29,4 +34,25 @@ func TestBoardUtils_KnowsTheSpaceForAnIndex(t *testing.T) {
 	assertEquals(t, Space{File: "h", Rank: 2}, SpaceForIndex(15))
 	assertEquals(t, Space{File: "a", Rank: 3}, SpaceForIndex(16))
 	assertEquals(t, Space{File: "h", Rank: 8}, SpaceForIndex(63))
+}
+
+func TestBoardUtils_GetsSpacesInADirection(t *testing.T) {
+	board := NewEmptyBoard()
+	space := Space{File: "d", Rank: 3}
+	piece := Piece{Color: "white", Space: space}
+
+	board.PlacePiece(piece)
+
+	leftNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(board, space, "left")
+	leftCaptureSpace, _    := GetCaptureSpaceInDirection(board, space, "left")
+
+	rightNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(board, space, "right")
+	rightCaptureSpace, _    := GetCaptureSpaceInDirection(board, space, "right")
+
+	fmt.Println(rightNonCaptureSpace)
+	assert(t, SameSpace(Space{File: "e", Rank: 4}, rightNonCaptureSpace), "right non capture space")
+	assert(t, SameSpace(Space{File: "f", Rank: 5}, rightCaptureSpace), "right capture space")
+
+	assert(t, SameSpace(Space{File: "c", Rank: 4}, leftNonCaptureSpace), "left non capture space")
+	assert(t, SameSpace(Space{File: "b", Rank: 5}, leftCaptureSpace), "left capture space")
 }

@@ -11,7 +11,7 @@ func IncludesMove(moves []Move, move Move) bool {
 }
 
 func sameMove(move1 Move, move2 Move) bool {
-	return sameSpace(move1.StartingSpace, move2.StartingSpace) && sameSpace(move1.TargetSpace, move2.TargetSpace)
+	return SameSpace(move1.StartingSpace, move2.StartingSpace) && SameSpace(move1.TargetSpace, move2.TargetSpace)
 }
 
 func getNextSpace(startingSpace Space, targetSpace Space) Space {
@@ -51,7 +51,7 @@ func decFile(file string) string {
 	return string(file[0] - 1)
 }
 
-func sameSpace(pieceSpace Space, targetSpace Space) bool {
+func SameSpace(pieceSpace Space, targetSpace Space) bool {
 	return pieceSpace.Rank == targetSpace.Rank &&
 		pieceSpace.File == targetSpace.File
 }
@@ -90,4 +90,23 @@ func SpaceColorForIndex(index int) string {
 	} else {
 		return oddColor
 	}
+}
+
+func GetNonCaptureSpaceInDirection(board *Board, space Space, direction string) (Space, bool) {
+	// piece := board.GetPieceAtSpace(space)
+	// color := piece.Color
+	// rank := space.Rank
+	// nextRank := 0
+
+	// if color == "black" {
+	// 	nextRank = rank - 1
+	// } else {
+	// 	nextRank = rank + 1
+	// }
+
+	return Space{}, false
+}
+
+func GetCaptureSpaceInDirection(board *Board, space Space, direction string) (Space, bool) {
+	return Space{}, false
 }
