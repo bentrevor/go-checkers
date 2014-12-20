@@ -21,7 +21,7 @@ func dummy() {
 }
 
 func NewGameBoard() *Board {
-	board := &Board{make([]Piece, 24, 32)}
+	board := &Board{make([]Piece, 24, 80)}
 	pieceIndex := 0
 
 	for i := 0; i < 64; i++ {
@@ -78,7 +78,7 @@ func (board *Board) ConsolePrint() {
 	}
 
 	for i := 0; i < 64; i++ {
-		space := SpaceFor(i)
+		space := SpaceForIndex(i)
 		piece := board.GetPieceAt(space)
 
 		if i % 2 == 1 || piece.Color == "" {
@@ -194,17 +194,18 @@ func sameSpace(pieceSpace Space, targetSpace Space) bool {
 }
 
 func initialPieceAtIndex(index int) (Piece, bool) {
-	color := colorFor(index)
+	pieceColor := initialPieceColorFor(index)
+	spaceColor := SpaceColorForIndex(index)
 
-	if index % 2 == 1 || color == "" {
+	if pieceColor == "" || spaceColor == "white" {
 		return Piece{}, false
 	} else {
-		piece := Piece{Color: color, Space: SpaceFor(index)}
+		piece := Piece{Color: pieceColor, Space: SpaceForIndex(index)}
 		return piece, true
 	}
 }
 
-func colorFor(index int) string {
+func initialPieceColorFor(index int) string {
 	if index < 24 {
 		return "white"
 	} else if index > 39 {
@@ -214,17 +215,28 @@ func colorFor(index int) string {
 	}
 }
 
-func SpaceFor(index int) Space {
+func SpaceForIndex(index int) Space {
 	rank := (index / 8) + 1
-	file := ""
+	file := string((index % 8) + 97)
 
-	if rank % 2 == 1 {
-		file = string((index % 8) + 97)
+	space := Space{File: file, Rank: rank}
+	return space
+}
+
+func SpaceColorForIndex(index int) string {
+	evenColor := ""
+	oddColor := ""
+	if ((index / 8) % 2) == 0 {
+		evenColor = "black"
+		oddColor  = "white"
 	} else {
-		file = string((index % 8) + 98)
+		evenColor = "white"
+		oddColor  = "black"
 	}
 
-	// fmt.Println("\n\n", index, file, rank, "\n\n")
-
-	return Space{File: file, Rank: rank}
+	if index % 2 == 0 {
+		return evenColor
+	} else {
+		return oddColor
+	}
 }
