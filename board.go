@@ -40,6 +40,22 @@ func NewGameBoard() *Board {
 	return board
 }
 
+func (board *Board) getNextMove(startingSpace Space, targetSpace Space) (Move, bool) {
+	if board.GetPieceAt(targetSpace).Color == "" {
+		move := Move{StartingSpace: startingSpace, TargetSpace: targetSpace}
+		return move, true
+	} else {
+		nextSpace := getNextSpace(startingSpace, targetSpace)
+
+		if board.GetPieceAt(nextSpace).Color == "" {
+			move := Move{StartingSpace: startingSpace, TargetSpace: nextSpace}
+			return move, true
+		} else {
+			return Move{}, false
+		}
+	}
+}
+
 func (board *Board) GetPieceAt(space Space) Piece {
 	for _, piece := range board.Pieces {
 		if sameSpace(piece.Space, space) {
@@ -63,20 +79,6 @@ func (board *Board) MovesForPiece(piece Piece) []Move {
 	space := piece.Space
 
 	return board.movesForSpace(space, piece.Color)
-}
-
-func Includes(moves []Move, move Move) bool {
-	for _, any_move := range moves {
-		if sameMove(move, any_move) {
-			return true
-		}
-	}
-
-	return false
-}
-
-func sameMove(move1 Move, move2 Move) bool {
-	return sameSpace(move1.StartingSpace, move2.StartingSpace) && sameSpace(move1.TargetSpace, move2.TargetSpace)
 }
 
 func (board *Board) ConsolePrint() {
@@ -141,43 +143,6 @@ func (board *Board) movesForSpace(startingSpace Space, color string) []Move {
 	return moves
 }
 
-func (board *Board) getNextMove(startingSpace Space, targetSpace Space) (Move, bool) {
-	if board.GetPieceAt(targetSpace).Color == "" {
-		move := Move{StartingSpace: startingSpace, TargetSpace: targetSpace}
-		return move, true
-	} else {
-		nextSpace := getNextSpace(startingSpace, targetSpace)
-
-		if board.GetPieceAt(nextSpace).Color == "" {
-			move := Move{StartingSpace: startingSpace, TargetSpace: nextSpace}
-			return move, true
-		} else {
-			return Move{}, false
-		}
-	}
-}
-
-func getNextSpace(startingSpace Space, targetSpace Space) Space {
-	increasingRank := startingSpace.Rank < targetSpace.Rank
-	increasingFile := startingSpace.File[0] < targetSpace.File[0]
-	nextRank := 0
-	nextFile := ""
-
-	if increasingRank {
-		nextRank = targetSpace.Rank + 1
-	} else {
-		nextRank = targetSpace.Rank - 1
-	}
-
-	if increasingFile {
-		nextFile = string(targetSpace.File[0] + 1)
-	} else {
-		nextFile = string(targetSpace.File[0] - 1)
-	}
-
-	return Space{File: nextFile, Rank: nextRank}
-}
-
 func (board *Board) createPieceAtIndex(pieceIndex int, spaceIndex int) (Piece, bool) {
 	if initialPiece, ok := initialPieceAtIndex(spaceIndex); ok {
 		board.Pieces[pieceIndex] = initialPiece
@@ -185,27 +150,6 @@ func (board *Board) createPieceAtIndex(pieceIndex int, spaceIndex int) (Piece, b
 	}
 
 	return Piece{}, false
-}
-
-func notOnLeftEdge(space Space) bool {
-	return space.File != "a"
-}
-
-func notOnRightEdge(space Space) bool {
-	return space.File != "h"
-}
-
-func incFile(file string) string {
-	return string(file[0] + 1)
-}
-
-func decFile(file string) string {
-	return string(file[0] - 1)
-}
-
-func sameSpace(pieceSpace Space, targetSpace Space) bool {
-	return pieceSpace.Rank == targetSpace.Rank &&
-		pieceSpace.File == targetSpace.File
 }
 
 func initialPieceAtIndex(index int) (Piece, bool) {
@@ -217,41 +161,5 @@ func initialPieceAtIndex(index int) (Piece, bool) {
 	} else {
 		piece := Piece{Color: pieceColor, Space: SpaceForIndex(index)}
 		return piece, true
-	}
-}
-
-func initialPieceColorFor(index int) string {
-	if index < 24 {
-		return "white"
-	} else if index > 39 {
-		return "black"
-	} else {
-		return ""
-	}
-}
-
-func SpaceForIndex(index int) Space {
-	rank := (index / 8) + 1
-	file := string((index % 8) + 97)
-
-	space := Space{File: file, Rank: rank}
-	return space
-}
-
-func SpaceColorForIndex(index int) string {
-	evenColor := ""
-	oddColor := ""
-	if ((index / 8) % 2) == 0 {
-		evenColor = "black"
-		oddColor  = "white"
-	} else {
-		evenColor = "white"
-		oddColor  = "black"
-	}
-
-	if index % 2 == 0 {
-		return evenColor
-	} else {
-		return oddColor
 	}
 }
