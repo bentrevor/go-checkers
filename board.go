@@ -16,6 +16,11 @@ type Board struct {
 	Pieces []Piece
 }
 
+type Move struct {
+	StartingSpace Space
+	TargetSpace Space
+}
+
 func dummy() {
 	fmt.Println()
 }
@@ -54,15 +59,15 @@ func (board *Board) PlacePiece(piece Piece) (Piece, bool) {
 	}
 }
 
-func (board *Board) MovesForPiece(piece Piece) []Space {
+func (board *Board) MovesForPiece(piece Piece) []Move {
 	space := piece.Space
 
 	return board.movesForSpace(space, piece.Color)
 }
 
-func Includes(moves []Space, move Space) bool {
-	for _, space := range moves {
-		if sameSpace(space, move) {
+func Includes(moves []Move, move Move) bool {
+	for _, any_move := range moves {
+		if sameMove(move, any_move) {
 			return true
 		}
 	}
@@ -70,7 +75,12 @@ func Includes(moves []Space, move Space) bool {
 	return false
 }
 
+func sameMove(move1 Move, move2 Move) bool {
+	return sameSpace(move1.StartingSpace, move2.StartingSpace) && sameSpace(move1.TargetSpace, move2.TargetSpace)
+}
+
 func (board *Board) ConsolePrint() {
+	fmt.Println()
 	spaces := []Space{}
 
 	for _, piece := range board.Pieces {
@@ -81,16 +91,18 @@ func (board *Board) ConsolePrint() {
 		space := SpaceForIndex(i)
 		piece := board.GetPieceAt(space)
 
-		if i % 2 == 1 || piece.Color == "" {
-			fmt.Print("..")
+		if piece.Color == "" {
+			fmt.Print("|_")
 		} else {
-			fmt.Print(piece.Space.File)
-			fmt.Print(piece.Space.Rank)
+			fmt.Printf("|%c", piece.Color[0])
+			// fmt.Print(piece.Space.Rank)
 		}
 		if i % 8 == 7 {
-			fmt.Println("==done with row \t%s==", space)
+			fmt.Println("|")
+			// fmt.Println("==done with row \t%s==", space)
 		}
 	}
+	fmt.Println()
 	return
 }
 
@@ -100,28 +112,28 @@ func (board *Board) addPiece(piece Piece) {
 	board.Pieces = append(board.Pieces, piece)
 }
 
-func (board *Board) movesForSpace(space Space, color string) []Space {
-	moves := []Space{}
+func (board *Board) movesForSpace(startingSpace Space, color string) []Move {
+	moves := []Move{}
 	nextRank := 0
 	if color == "white" {
-		nextRank = space.Rank + 1
+		nextRank = startingSpace.Rank + 1
 	} else {
-		nextRank = space.Rank - 1
+		nextRank = startingSpace.Rank - 1
 	}
 
-	if notOnLeftEdge(space) {
-		leftFile := decFile(space.File)
+	if notOnLeftEdge(startingSpace) {
+		leftFile := decFile(startingSpace.File)
 		targetSpace := Space{File: leftFile, Rank: nextRank}
-		if nextMove, ok := board.getNextMove(space, targetSpace); ok {
+		if nextMove, ok := board.getNextMove(startingSpace, targetSpace); ok {
 			moves = append(moves, nextMove)
 		}
 	}
 
-	if notOnRightEdge(space) {
-		rightFile := incFile(space.File)
+	if notOnRightEdge(startingSpace) {
+		rightFile := incFile(startingSpace.File)
 		targetSpace := Space{File: rightFile, Rank: nextRank}
 
-		if nextMove, ok := board.getNextMove(space, targetSpace); ok {
+		if nextMove, ok := board.getNextMove(startingSpace, targetSpace); ok {
 			moves = append(moves, nextMove)
 		}
 	}
@@ -129,15 +141,18 @@ func (board *Board) movesForSpace(space Space, color string) []Space {
 	return moves
 }
 
-func (board *Board) getNextMove(startingSpace Space, targetSpace Space) (Space, bool) {
+func (board *Board) getNextMove(startingSpace Space, targetSpace Space) (Move, bool) {
 	if board.GetPieceAt(targetSpace).Color == "" {
-		return targetSpace, true
+		move := Move{StartingSpace: startingSpace, TargetSpace: targetSpace}
+		return move, true
 	} else {
 		nextSpace := getNextSpace(startingSpace, targetSpace)
+
 		if board.GetPieceAt(nextSpace).Color == "" {
-			return nextSpace, true
+			move := Move{StartingSpace: startingSpace, TargetSpace: nextSpace}
+			return move, true
 		} else {
-			return Space{}, false
+			return Move{}, false
 		}
 	}
 }

@@ -90,9 +90,17 @@ func TestBoard_KnowsWhereAPieceCanMove(t *testing.T) {
 	whiteMove1 := Space{File: "f", Rank: 4}
 	whiteMove2 := Space{File: "h", Rank: 4}
 	blackMove := Space{File: "g", Rank: 5}
+	whiteMoves := []Move{
+		Move{StartingSpace: Space{File: "g", Rank: 3}, TargetSpace: whiteMove1},
+		Move{StartingSpace: Space{File: "g", Rank: 3}, TargetSpace: whiteMove2},
+	}
 
-	assertEquals(t, []Space{whiteMove1, whiteMove2}, board.MovesForPiece(whitePiece))
-	assertEquals(t, []Space{blackMove}, board.MovesForPiece(blackPiece))
+	blackMoves := []Move{
+		Move{StartingSpace: Space{File: "h", Rank: 6}, TargetSpace: blackMove},
+	}
+
+	assertEquals(t, whiteMoves, board.MovesForPiece(whitePiece))
+	assertEquals(t, blackMoves, board.MovesForPiece(blackPiece))
 }
 
 func TestBoard_KnowsTheSpaceForAnIndex(t *testing.T) {
@@ -107,18 +115,28 @@ func TestBoard_KnowsTheSpaceForAnIndex(t *testing.T) {
 }
 
 func TestBoard_KnowsWhereAPieceCanJump(t *testing.T) {
-	d6 := board.GetPieceAt(Space{File: "d", Rank: 6})
-	f6 := board.GetPieceAt(Space{File: "f", Rank: 6})
+	d6 := Space{File: "d", Rank: 6}
+	d6Piece := board.GetPieceAt(d6)
+	f6 := Space{File: "f", Rank: 6}
+	f6Piece := board.GetPieceAt(f6)
+
 	emptySpace := Space{File: "e", Rank: 5}
 	whitePiece := Piece{Color: "white", Space: emptySpace}
 
 	board.PlacePiece(whitePiece)
 
-	captureMoveForD6 := Space{File: "f", Rank: 4}
-	captureMoveForF6 := Space{File: "d", Rank: 4}
+	captureMoveForD6 := Move{
+		StartingSpace: d6,
+		TargetSpace: Space{File: "f", Rank: 4},
+	}
 
-	d6Moves := board.MovesForPiece(d6)
-	f6Moves := board.MovesForPiece(f6)
+	captureMoveForF6 := Move{
+		StartingSpace: f6,
+		TargetSpace: Space{File: "d", Rank: 4},
+	}
+
+	d6Moves := board.MovesForPiece(d6Piece)
+	f6Moves := board.MovesForPiece(f6Piece)
 
 	assert(t, Includes(d6Moves, captureMoveForD6), "d6 capture move")
 	assert(t, Includes(f6Moves, captureMoveForF6), "f6 capture move")
