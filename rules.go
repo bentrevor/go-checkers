@@ -5,10 +5,14 @@ type Move struct {
 	TargetSpace Space
 }
 
-func (board *Board) MovesForPiece(piece Piece) []Move {
+func MovesForPiece(piece Piece, board *Board) []Move {
 	space := piece.Space
 
 	return board.movesForSpace(space, piece.Color)
+}
+
+func gameOver(board *Board) bool {
+	return false
 }
 
 func (board *Board) movesForSpace(startingSpace Space, color string) []Move {

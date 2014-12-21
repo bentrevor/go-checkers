@@ -84,8 +84,8 @@ func TestBoard_KnowsWhereAPieceCanMove(t *testing.T) {
 		Move{StartingSpace: NewSpace("h6"), TargetSpace: blackMove},
 	}
 
-	assertEquals(t, whiteMoves, board.MovesForPiece(whitePiece))
-	assertEquals(t, blackMoves, board.MovesForPiece(blackPiece))
+	assertEquals(t, whiteMoves, MovesForPiece(whitePiece, board))
+	assertEquals(t, blackMoves, MovesForPiece(blackPiece, board))
 }
 
 func TestBoard_KnowsWhereAPieceCanJump(t *testing.T) {
@@ -109,8 +109,8 @@ func TestBoard_KnowsWhereAPieceCanJump(t *testing.T) {
 		TargetSpace: NewSpace("d4"),
 	}
 
-	d6Moves := board.MovesForPiece(d6Piece)
-	f6Moves := board.MovesForPiece(f6Piece)
+	d6Moves := MovesForPiece(d6Piece, board)
+	f6Moves := MovesForPiece(f6Piece, board)
 
 	assert(t, IncludesMove(d6Moves, captureMoveForD6), "d6 capture move")
 	assert(t, IncludesMove(f6Moves, captureMoveForF6), "f6 capture move")
