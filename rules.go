@@ -13,6 +13,7 @@ func (board *Board) MovesForPiece(piece Piece) []Move {
 
 func (board *Board) movesForSpace(startingSpace Space, color string) []Move {
 	moves := []Move{}
+
 	nextRank := 0
 
 	if color == "white" {
