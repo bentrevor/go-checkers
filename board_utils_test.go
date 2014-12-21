@@ -26,32 +26,49 @@ func TestBoardUtils_KnowsTheColorOfASpace(t *testing.T) {
 }
 
 func TestBoardUtils_KnowsTheSpaceForAnIndex(t *testing.T) {
-	assertEquals(t, Space{File: "a", Rank: 1}, SpaceForIndex(0))
-	assertEquals(t, Space{File: "b", Rank: 1}, SpaceForIndex(1))
-	assertEquals(t, Space{File: "h", Rank: 1}, SpaceForIndex(7))
-	assertEquals(t, Space{File: "a", Rank: 2}, SpaceForIndex(8))
-	assertEquals(t, Space{File: "b", Rank: 2}, SpaceForIndex(9))
-	assertEquals(t, Space{File: "h", Rank: 2}, SpaceForIndex(15))
-	assertEquals(t, Space{File: "a", Rank: 3}, SpaceForIndex(16))
-	assertEquals(t, Space{File: "h", Rank: 8}, SpaceForIndex(63))
+	assertEquals(t, NewSpace("a1"), SpaceForIndex(0))
+	assertEquals(t, NewSpace("b1"), SpaceForIndex(1))
+	assertEquals(t, NewSpace("h1"), SpaceForIndex(7))
+	assertEquals(t, NewSpace("a2"), SpaceForIndex(8))
+	assertEquals(t, NewSpace("b2"), SpaceForIndex(9))
+	assertEquals(t, NewSpace("h2"), SpaceForIndex(15))
+	assertEquals(t, NewSpace("a3"), SpaceForIndex(16))
+	assertEquals(t, NewSpace("h8"), SpaceForIndex(63))
 }
 
 func TestBoardUtils_GetsSpacesInADirection(t *testing.T) {
+	space := NewSpace("d3")
+
+	leftNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, "white", "left")
+	leftCaptureSpace, _    := GetCaptureSpaceInDirection(space, "white", "left")
+
+	rightNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, "white", "right")
+	rightCaptureSpace, _    := GetCaptureSpaceInDirection(space, "white", "right")
+
+	// fmt.Println("\n\nasdf\n", leftNonCaptureSpace)
+	assert(t, SameSpace(NewSpace("c4"), leftNonCaptureSpace), "white left non capture space")
+	assert(t, SameSpace(NewSpace("b5"), leftCaptureSpace), "white left capture space")
+
+	assert(t, SameSpace(NewSpace("e4"), rightNonCaptureSpace), "white right non capture space")
+	assert(t, SameSpace(NewSpace("f5"), rightCaptureSpace), "white right capture space")
+}
+
+func TestBoardUtils_GetsSpacesInADirectionAtTheEdgeOfTheBoard(t *testing.T) {
 	board := NewEmptyBoard()
-	space := Space{File: "d", Rank: 3}
-	piece := Piece{Color: "white", Space: space}
+	space := NewSpace("h2")
+	piece := Piece{Color: "black", Space: space}
 
 	board.PlacePiece(piece)
 
-	leftNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(board, space, "left")
-	leftCaptureSpace, _    := GetCaptureSpaceInDirection(board, space, "left")
+	leftNonCaptureSpace, _     := GetNonCaptureSpaceInDirection(space, "black", "left")
+	_, leftCaptureSpaceCreated := GetCaptureSpaceInDirection(space, "black", "left")
 
-	rightNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(board, space, "right")
-	rightCaptureSpace, _    := GetCaptureSpaceInDirection(board, space, "right")
+	_, rightNonCaptureSpaceCreated := GetNonCaptureSpaceInDirection(space, "black", "right")
+	_, rightCaptureSpaceCreated    := GetCaptureSpaceInDirection(space, "black", "right")
 
-	assert(t, SameSpace(Space{File: "e", Rank: 4}, rightNonCaptureSpace), "right non capture space")
-	assert(t, SameSpace(Space{File: "f", Rank: 5}, rightCaptureSpace), "right capture space")
+	assert(t, SameSpace(NewSpace("g1"), leftNonCaptureSpace), "left non capture space")
+	assert(t, !leftCaptureSpaceCreated, "left capture space shouldn't exist")
 
-	assert(t, SameSpace(Space{File: "c", Rank: 4}, leftNonCaptureSpace), "left non capture space")
-	assert(t, SameSpace(Space{File: "b", Rank: 5}, leftCaptureSpace), "left capture space")
+	assert(t, !rightNonCaptureSpaceCreated, "right non capture space shouldn't exist")
+	assert(t, !rightCaptureSpaceCreated, "right capture space shouldn't exist")
 }

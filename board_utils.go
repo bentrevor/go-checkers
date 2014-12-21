@@ -1,5 +1,7 @@
 package checkers
 
+// import "fmt"
+
 func IncludesMove(moves []Move, move Move) bool {
 	for _, any_move := range moves {
 		if sameMove(move, any_move) {
@@ -92,9 +94,7 @@ func SpaceColorForIndex(index int) string {
 	}
 }
 
-func GetNonCaptureSpaceInDirection(board *Board, space Space, direction string) (Space, bool) {
-	piece := board.GetPieceAtSpace(space)
-	color := piece.Color
+func GetNonCaptureSpaceInDirection(space Space, color string, direction string) (Space, bool) {
 	nextRank := 0
 	nextFile := ""
 
@@ -110,13 +110,25 @@ func GetNonCaptureSpaceInDirection(board *Board, space Space, direction string) 
 		nextFile = incFile(space.File)
 	}
 
-	return Space{File: nextFile, Rank: nextRank}, true
+	if onBoard(nextFile, nextRank) {
+		return Space{File: nextFile, Rank: nextRank}, true
+	} else {
+		return Space{}, false
+	}
 }
 
-func GetCaptureSpaceInDirection(board *Board, space Space, direction string) (Space, bool) {
-	if nonCaptureSpace, ok := GetNonCaptureSpaceInDirection(board, space, direction); ok {
-		return GetNonCaptureSpaceInDirection(board, nonCaptureSpace, direction)
+func GetCaptureSpaceInDirection(space Space, color string, direction string) (Space, bool) {
+	if nonCaptureSpace, ok := GetNonCaptureSpaceInDirection(space, color, direction); ok {
+		// fmt.Println("")//"\n\nspace: ", space, "\nnext space: ", nonCaptureSpace, "\n==\n")
+		return GetNonCaptureSpaceInDirection(nonCaptureSpace, color, direction)
 	}
 
 	return Space{}, false
+}
+
+func onBoard(file string, rank int) bool {
+	r := rank > 0 && rank < 8 &&
+		file >= "a" && file <= "h"
+	// fmt.Println("got", r, "for", file, rank)
+	return r
 }

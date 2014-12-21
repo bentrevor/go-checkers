@@ -2,6 +2,7 @@ package checkers
 
 import (
 	"fmt"
+	"strconv"
 	"bytes"
 )
 
@@ -31,6 +32,13 @@ func NewGameBoard() *Board {
 	board := NewEmptyBoard()
 	board.createInitialPieces()
 	return board
+}
+
+func NewSpace(coordinates string) Space {
+	file := string(coordinates[0])
+	rank, _ := strconv.Atoi(string(coordinates[1]))
+
+	return Space{File: file, Rank: rank}
 }
 
 func (board *Board) GetPieceAtSpace(space Space) Piece {

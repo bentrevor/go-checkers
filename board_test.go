@@ -15,33 +15,33 @@ func TestBoard_StartsWith24Pieces(t *testing.T) {
 
 func TestBoard_SetsTheInitialPieceLayout(t *testing.T) {
 	whiteSpaces := []Space{
-		Space{File: "a", Rank: 1},
-		Space{File: "c", Rank: 1},
-		Space{File: "e", Rank: 1},
-		Space{File: "g", Rank: 1},
-		Space{File: "b", Rank: 2},
-		Space{File: "d", Rank: 2},
-		Space{File: "f", Rank: 2},
-		Space{File: "h", Rank: 2},
-		Space{File: "a", Rank: 3},
-		Space{File: "c", Rank: 3},
-		Space{File: "e", Rank: 3},
-		Space{File: "g", Rank: 3},
+		NewSpace("a1"),
+		NewSpace("c1"),
+		NewSpace("e1"),
+		NewSpace("g1"),
+		NewSpace("b2"),
+		NewSpace("d2"),
+		NewSpace("f2"),
+		NewSpace("h2"),
+		NewSpace("a3"),
+		NewSpace("c3"),
+		NewSpace("e3"),
+		NewSpace("g3"),
 	}
 
 	blackSpaces := []Space{
-		Space{File: "b", Rank: 6},
-		Space{File: "d", Rank: 6},
-		Space{File: "f", Rank: 6},
-		Space{File: "h", Rank: 6},
-		Space{File: "a", Rank: 7},
-		Space{File: "c", Rank: 7},
-		Space{File: "e", Rank: 7},
-		Space{File: "g", Rank: 7},
-		Space{File: "b", Rank: 8},
-		Space{File: "d", Rank: 8},
-		Space{File: "f", Rank: 8},
-		Space{File: "h", Rank: 8},
+		NewSpace("b6"),
+		NewSpace("d6"),
+		NewSpace("f6"),
+		NewSpace("h6"),
+		NewSpace("a7"),
+		NewSpace("c7"),
+		NewSpace("e7"),
+		NewSpace("g7"),
+		NewSpace("b8"),
+		NewSpace("d8"),
+		NewSpace("f8"),
+		NewSpace("h8"),
 	}
 
 	for _, space := range whiteSpaces {
@@ -55,8 +55,8 @@ func TestBoard_SetsTheInitialPieceLayout(t *testing.T) {
 
 
 func TestBoard_CanPlaceAPiece(t *testing.T) {
-	emptySpace := Space{File: "e", Rank: 5}
-	occupiedSpace := Space{File: "e", Rank: 7}
+	emptySpace := NewSpace("e5")
+	occupiedSpace := NewSpace("e7")
 
 	piece1 := Piece{Color: "white", Space: emptySpace}
 	piece2 := Piece{Color: "white", Space: occupiedSpace}
@@ -69,19 +69,19 @@ func TestBoard_CanPlaceAPiece(t *testing.T) {
 }
 
 func TestBoard_KnowsWhereAPieceCanMove(t *testing.T) {
-	whitePiece := board.GetPieceAtSpace(Space{File: "g", Rank: 3})
-	blackPiece := board.GetPieceAtSpace(Space{File: "h", Rank: 6})
+	whitePiece := board.GetPieceAtSpace(NewSpace("g3"))
+	blackPiece := board.GetPieceAtSpace(NewSpace("h6"))
 
-	whiteMove1 := Space{File: "f", Rank: 4}
-	whiteMove2 := Space{File: "h", Rank: 4}
-	blackMove := Space{File: "g", Rank: 5}
+	whiteMove1 := NewSpace("f4")
+	whiteMove2 := NewSpace("h4")
+	blackMove := NewSpace("g5")
 	whiteMoves := []Move{
-		Move{StartingSpace: Space{File: "g", Rank: 3}, TargetSpace: whiteMove1},
-		Move{StartingSpace: Space{File: "g", Rank: 3}, TargetSpace: whiteMove2},
+		Move{StartingSpace: NewSpace("g3"), TargetSpace: whiteMove1},
+		Move{StartingSpace: NewSpace("g3"), TargetSpace: whiteMove2},
 	}
 
 	blackMoves := []Move{
-		Move{StartingSpace: Space{File: "h", Rank: 6}, TargetSpace: blackMove},
+		Move{StartingSpace: NewSpace("h6"), TargetSpace: blackMove},
 	}
 
 	assertEquals(t, whiteMoves, board.MovesForPiece(whitePiece))
@@ -89,24 +89,24 @@ func TestBoard_KnowsWhereAPieceCanMove(t *testing.T) {
 }
 
 func TestBoard_KnowsWhereAPieceCanJump(t *testing.T) {
-	d6 := Space{File: "d", Rank: 6}
+	d6 := NewSpace("d6")
 	d6Piece := board.GetPieceAtSpace(d6)
-	f6 := Space{File: "f", Rank: 6}
+	f6 := NewSpace("f6")
 	f6Piece := board.GetPieceAtSpace(f6)
 
-	emptySpace := Space{File: "e", Rank: 5}
+	emptySpace := NewSpace("e5")
 	whitePiece := Piece{Color: "white", Space: emptySpace}
 
 	board.PlacePiece(whitePiece)
 
 	captureMoveForD6 := Move{
 		StartingSpace: d6,
-		TargetSpace: Space{File: "f", Rank: 4},
+		TargetSpace: NewSpace("f4"),
 	}
 
 	captureMoveForF6 := Move{
 		StartingSpace: f6,
-		TargetSpace: Space{File: "d", Rank: 4},
+		TargetSpace: NewSpace("d4"),
 	}
 
 	d6Moves := board.MovesForPiece(d6Piece)
