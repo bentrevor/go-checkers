@@ -49,7 +49,6 @@ func TestBoardUtils_GetsSpacesInADirection(t *testing.T) {
 	rightNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(board, space, "right")
 	rightCaptureSpace, _    := GetCaptureSpaceInDirection(board, space, "right")
 
-	fmt.Println(rightNonCaptureSpace)
 	assert(t, SameSpace(Space{File: "e", Rank: 4}, rightNonCaptureSpace), "right non capture space")
 	assert(t, SameSpace(Space{File: "f", Rank: 5}, rightCaptureSpace), "right capture space")
 

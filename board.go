@@ -1,6 +1,9 @@
 package checkers
 
-import "fmt"
+import (
+	"fmt"
+	"bytes"
+)
 
 type Space struct {
 	Rank int
@@ -52,6 +55,9 @@ func (board *Board) PlacePiece(piece Piece) (Piece, bool) {
 func (board *Board) ConsolePrint() {
 	fmt.Println()
 	spaces := []Space{}
+	emptySpace := "|_|"
+	var row bytes.Buffer
+	rows := []string{}
 
 	for _, piece := range board.Pieces {
 		spaces = append(spaces, piece.Space)
@@ -62,19 +68,35 @@ func (board *Board) ConsolePrint() {
 		piece := board.GetPieceAtSpace(space)
 
 		if piece.Color == "" {
-			fmt.Print("|_")
+			row.WriteString(emptySpace)
 		} else {
-			fmt.Printf("|%c", piece.Color[0])
+			printableSpace := fmt.Sprintf("|%c|", piece.Color[0])
+			row.WriteString(printableSpace)
 		}
 		if i % 8 == 7 {
-			fmt.Println("|")
+			row.WriteString("\n")
+			rows = append(rows, row.String())
+			row.Reset()
 		}
 	}
-	fmt.Println()
+
+	fmt.Println(reverseRows(rows))
+	fmt.Println("  1  2  3  4  5  6  7  8")
 	return
 }
 
 // private
+
+func reverseRows(rows []string) []string {
+	length := len(rows)
+	reversed := make([]string, length)
+
+	for i := 0; i < length; i++ {
+		reversed[length - (i + 1)] = rows[i]
+	}
+
+	return reversed
+}
 
 func (board *Board) createInitialPieces() {
 	pieceIndex := 0

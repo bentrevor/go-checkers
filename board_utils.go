@@ -93,20 +93,30 @@ func SpaceColorForIndex(index int) string {
 }
 
 func GetNonCaptureSpaceInDirection(board *Board, space Space, direction string) (Space, bool) {
-	// piece := board.GetPieceAtSpace(space)
-	// color := piece.Color
-	// rank := space.Rank
-	// nextRank := 0
+	piece := board.GetPieceAtSpace(space)
+	color := piece.Color
+	nextRank := 0
+	nextFile := ""
 
-	// if color == "black" {
-	// 	nextRank = rank - 1
-	// } else {
-	// 	nextRank = rank + 1
-	// }
+	if color == "black" {
+		nextRank = space.Rank - 1
+	} else {
+		nextRank = space.Rank + 1
+	}
 
-	return Space{}, false
+	if direction == "left" {
+		nextFile = decFile(space.File)
+	} else {
+		nextFile = incFile(space.File)
+	}
+
+	return Space{File: nextFile, Rank: nextRank}, true
 }
 
 func GetCaptureSpaceInDirection(board *Board, space Space, direction string) (Space, bool) {
+	if nonCaptureSpace, ok := GetNonCaptureSpaceInDirection(board, space, direction); ok {
+		return GetNonCaptureSpaceInDirection(board, nonCaptureSpace, direction)
+	}
+
 	return Space{}, false
 }
