@@ -2,8 +2,6 @@ package checkers
 
 import (
 	"fmt"
-	// "strconv"
-	// "bytes"
 )
 
 type Game struct {

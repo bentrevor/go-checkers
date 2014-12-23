@@ -1,9 +1,10 @@
 package checkers_test
 
 import (
-	. "github.com/bentrevor/checkers"
-	"testing"
 	"fmt"
+	"testing"
+
+	. "github.com/bentrevor/checkers"
 )
 
 func useFmt() {
@@ -40,12 +41,11 @@ func TestBoardUtils_GetsSpacesInADirection(t *testing.T) {
 	space := NewSpace("d3")
 
 	leftNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, "white", "left")
-	leftCaptureSpace, _    := GetCaptureSpaceInDirection(space, "white", "left")
+	leftCaptureSpace, _ := GetCaptureSpaceInDirection(space, "white", "left")
 
 	rightNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, "white", "right")
-	rightCaptureSpace, _    := GetCaptureSpaceInDirection(space, "white", "right")
+	rightCaptureSpace, _ := GetCaptureSpaceInDirection(space, "white", "right")
 
-	// fmt.Println("\n\nasdf\n", leftNonCaptureSpace)
 	assert(t, SameSpace(NewSpace("c4"), leftNonCaptureSpace), "white left non capture space")
 	assert(t, SameSpace(NewSpace("b5"), leftCaptureSpace), "white left capture space")
 
@@ -60,11 +60,11 @@ func TestBoardUtils_GetsSpacesInADirectionAtTheEdgeOfTheBoard(t *testing.T) {
 
 	board.PlacePiece(piece)
 
-	leftNonCaptureSpace, _     := GetNonCaptureSpaceInDirection(space, "black", "left")
+	leftNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, "black", "left")
 	_, leftCaptureSpaceCreated := GetCaptureSpaceInDirection(space, "black", "left")
 
 	_, rightNonCaptureSpaceCreated := GetNonCaptureSpaceInDirection(space, "black", "right")
-	_, rightCaptureSpaceCreated    := GetCaptureSpaceInDirection(space, "black", "right")
+	_, rightCaptureSpaceCreated := GetCaptureSpaceInDirection(space, "black", "right")
 
 	assert(t, SameSpace(NewSpace("g1"), leftNonCaptureSpace), "left non capture space")
 	assert(t, !leftCaptureSpaceCreated, "left capture space shouldn't exist")

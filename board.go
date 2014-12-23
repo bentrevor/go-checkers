@@ -1,9 +1,9 @@
 package checkers
 
 import (
+	"bytes"
 	"fmt"
 	"strconv"
-	"bytes"
 )
 
 type Space struct {
@@ -18,10 +18,6 @@ type Piece struct {
 
 type Board struct {
 	Pieces []Piece
-}
-
-func dummy() { // no more "unused import 'fmt'"
-	fmt.Println()
 }
 
 func NewEmptyBoard() *Board {
@@ -81,7 +77,7 @@ func (board *Board) ConsolePrint() {
 			printableSpace := fmt.Sprintf("|%c|", piece.Color[0])
 			row.WriteString(printableSpace)
 		}
-		if i % 8 == 7 {
+		if i%8 == 7 {
 			row.WriteString("\n")
 			rows = append(rows, row.String())
 			row.Reset()
@@ -100,7 +96,7 @@ func reverseRows(rows []string) []string {
 	reversed := make([]string, length)
 
 	for i := 0; i < length; i++ {
-		reversed[length - (i + 1)] = rows[i]
+		reversed[length-(i+1)] = rows[i]
 	}
 
 	return reversed

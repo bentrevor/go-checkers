@@ -2,7 +2,7 @@ package checkers
 
 type Move struct {
 	StartingSpace Space
-	TargetSpace Space
+	TargetSpace   Space
 }
 
 func MovesForPiece(piece Piece, board *Board) []Move {

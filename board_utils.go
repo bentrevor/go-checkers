@@ -1,7 +1,5 @@
 package checkers
 
-// import "fmt"
-
 func IncludesMove(moves []Move, move Move) bool {
 	for _, any_move := range moves {
 		if SameMove(move, any_move) {
@@ -32,7 +30,7 @@ func SpaceForIndex(index int) Space {
 func SpaceColorForIndex(index int) string {
 	oddColor, evenColor := getOddAndEvenColor(index)
 
-	if index % 2 == 0 {
+	if index%2 == 0 {
 		return evenColor
 	} else {
 		return oddColor
@@ -133,7 +131,6 @@ func initialPieceColorFor(index int) string {
 	}
 }
 
-
 func onBoard(file string, rank int) bool {
 	r := rank > 0 && rank < 8 &&
 		file >= "a" && file <= "h"
@@ -143,7 +140,7 @@ func onBoard(file string, rank int) bool {
 func getOddAndEvenColor(index int) (string, string) {
 	row := index / 8
 
-	if row % 2 == 0 {
+	if row%2 == 0 {
 		return "white", "black"
 	} else {
 		return "black", "white"

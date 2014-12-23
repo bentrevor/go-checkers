@@ -1,9 +1,9 @@
 package checkers_test
 
 import (
-	. "github.com/bentrevor/checkers"
-	// "fmt"
 	"testing"
+
+	. "github.com/bentrevor/checkers"
 )
 
 var game = NewGame()
