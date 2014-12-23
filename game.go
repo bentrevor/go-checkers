@@ -5,29 +5,39 @@ import (
 )
 
 type Game struct {
-	board        *Board
-	CurrentColor string
+	Board         *Board
+	CurrentPlayer Player
+	OtherPlayer   Player
 }
 
 func NewGame() Game {
-	return Game{CurrentColor: "white"}
+	return Game{
+		Board:         NewGameBoard(),
+		CurrentPlayer: NewPlayer("white"),
+		OtherPlayer:   NewPlayer("black"),
+	}
 }
 
 func (game *Game) NextTurn() {
-	game.toggleCurrentColor()
+	move := game.CurrentPlayer.GetMove(game.Board)
+	fmt.Println(move)
+	// game.board.MakeMove(move)
+	game.togglePlayers()
 }
 
 func (game *Game) Start() {
-	for !gameOver(game.board) {
+	for !gameOver(game.Board) {
 		fmt.Println("asdf")
 		game.NextTurn()
 	}
 }
 
-func (game *Game) toggleCurrentColor() {
-	if game.CurrentColor == "white" {
-		game.CurrentColor = "black"
-	} else {
-		game.CurrentColor = "white"
-	}
+func (game *Game) CurrentColor() string {
+	return game.CurrentPlayer.Color()
+}
+
+func (game *Game) togglePlayers() {
+	p := game.CurrentPlayer
+	game.CurrentPlayer = game.OtherPlayer
+	game.OtherPlayer = p
 }
