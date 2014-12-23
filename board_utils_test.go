@@ -23,9 +23,6 @@ func TestBoardUtils_KnowsTheColorOfASpace(t *testing.T) {
 
 func TestBoardUtils_KnowsTheSpaceForAnIndex(t *testing.T) {
 	assertEquals(t, A1, SpaceForIndex(0))
-	assertEquals(t, B1, SpaceForIndex(1))
-	assertEquals(t, H1, SpaceForIndex(7))
-	assertEquals(t, A2, SpaceForIndex(8))
 	assertEquals(t, B2, SpaceForIndex(9))
 	assertEquals(t, H2, SpaceForIndex(15))
 	assertEquals(t, A3, SpaceForIndex(16))
@@ -33,7 +30,7 @@ func TestBoardUtils_KnowsTheSpaceForAnIndex(t *testing.T) {
 }
 
 func TestBoardUtils_GetsSpacesInADirection(t *testing.T) {
-	space := D3
+	space := D4
 
 	leftNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, "white", "left")
 	leftCaptureSpace, _ := GetCaptureSpaceInDirection(space, "white", "left")
@@ -41,11 +38,11 @@ func TestBoardUtils_GetsSpacesInADirection(t *testing.T) {
 	rightNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, "white", "right")
 	rightCaptureSpace, _ := GetCaptureSpaceInDirection(space, "white", "right")
 
-	assert(t, SameSpace(C4, leftNonCaptureSpace), "white left non capture space")
-	assert(t, SameSpace(B5, leftCaptureSpace), "white left capture space")
+	assert(t, SameSpace(C5, leftNonCaptureSpace), "white left non capture space")
+	assert(t, SameSpace(B6, leftCaptureSpace), "white left capture space")
 
-	assert(t, SameSpace(E4, rightNonCaptureSpace), "white right non capture space")
-	assert(t, SameSpace(F5, rightCaptureSpace), "white right capture space")
+	assert(t, SameSpace(E5, rightNonCaptureSpace), "white right non capture space")
+	assert(t, SameSpace(F6, rightCaptureSpace), "white right capture space")
 }
 
 func TestBoardUtils_GetsSpacesInADirectionAtTheEdgeOfTheBoard(t *testing.T) {

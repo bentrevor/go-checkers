@@ -41,6 +41,10 @@ func (board *Board) movesForSpace(startingSpace Space, color string) []Move {
 	return moves
 }
 
+func IsLegalMove(move Move, board *Board, color string) bool {
+	return true
+}
+
 func tryLeftMove(board *Board, startingSpace Space, nextRank int) (Move, bool) {
 	if notOnLeftEdge(startingSpace) {
 		leftFile := decFile(startingSpace.File)

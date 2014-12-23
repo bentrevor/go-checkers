@@ -39,3 +39,30 @@ func TestRules_KnowsWhereAPieceCanJump(t *testing.T) {
 	assert(t, IncludesMove(d6Moves, captureMoveForD6), "d6 capture move")
 	assert(t, IncludesMove(f6Moves, captureMoveForF6), "f6 capture move")
 }
+
+func TestRules_KnowsWhenAMoveIsValid(t *testing.T) {
+	move := Move{StartingSpace: A3, TargetSpace: B4}
+	assert(t, IsLegalMove(move, board, "white"), "valid white noncapture move")
+
+	move = Move{StartingSpace: B6, TargetSpace: C5}
+	assert(t, IsLegalMove(move, board, "black"), "valid black noncapture move")
+
+	board.PlacePiece(Piece{Color: "black", Space: F4})
+	move = Move{StartingSpace: E3, TargetSpace: G5}
+	assert(t, !IsLegalMove(move, board, "white"), "valid white capture move")
+}
+
+func TestRules_KnowsWhenAMoveIsInvalid(t *testing.T) {
+	move := Move{StartingSpace: A3, TargetSpace: B4}
+	assert(t, !IsLegalMove(move, board, "black"), "invalid black move - wrong color")
+
+	move = Move{StartingSpace: A3, TargetSpace: A3}
+	assert(t, !IsLegalMove(move, board, "white"), "invalid white move - not a real move")
+
+	board.PlacePiece(Piece{Color: "black", Space: F4})
+	move = Move{StartingSpace: E3, TargetSpace: F4}
+	assert(t, !IsLegalMove(move, board, "white"), "invalid white move - moving into an occupied square")
+
+	move = Move{StartingSpace: F4, TargetSpace: G3}
+	assert(t, !IsLegalMove(move, board, "black"), "invalid black move - moving into an occupied square")
+}

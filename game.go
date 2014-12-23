@@ -28,8 +28,17 @@ func NewGameWithBoard(board *Board) Game {
 
 func (game *Game) NextTurn() {
 	move := game.CurrentPlayer.GetMove(game.Board)
+
+	for invalidInput(move) {
+		move = game.CurrentPlayer.GetMove(game.Board)
+	}
+
 	game.Board.MakeMove(move)
 	game.togglePlayers()
+}
+
+func invalidInput(move Move) bool {
+	return false
 }
 
 func (game *Game) Start() {
