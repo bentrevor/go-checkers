@@ -40,3 +40,21 @@ func TestBoard_CanPlaceAPiece(t *testing.T) {
 	assert(t, createdPieceAtE5, "should have placed piece at e5")
 	assert(t, !createdPieceAtE7, "should not have placed piece at e5")
 }
+
+func TestBoard_CanRemovePieces(t *testing.T) {
+	board.RemovePieceAtSpace(G3)
+
+	assertEquals(t, "", board.GetPieceAtSpace(G3).Color)
+}
+
+func TestBoard_CanMakeMoves(t *testing.T) {
+	board := Board{}
+	piece := Piece{Color: "white", Space: G3}
+	board.PlacePiece(piece)
+	move := Move{StartingSpace: G3, TargetSpace: H4}
+
+	board.MakeMove(move)
+
+	assertEquals(t, "white", board.GetPieceAtSpace(H4).Color)
+	assertEquals(t, "", board.GetPieceAtSpace(G3).Color)
+}

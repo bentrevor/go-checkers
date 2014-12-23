@@ -18,10 +18,17 @@ func NewGame() Game {
 	}
 }
 
+func NewGameWithBoard(board *Board) Game {
+	return Game{
+		Board:         board,
+		CurrentPlayer: NewPlayer("white"),
+		OtherPlayer:   NewPlayer("black"),
+	}
+}
+
 func (game *Game) NextTurn() {
 	move := game.CurrentPlayer.GetMove(game.Board)
-	fmt.Println(move)
-	// game.board.MakeMove(move)
+	game.Board.MakeMove(move)
 	game.togglePlayers()
 }
 

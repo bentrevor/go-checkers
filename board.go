@@ -34,6 +34,26 @@ func (board *Board) GetPieceAtSpace(space Space) Piece {
 	return Piece{}
 }
 
+func (board *Board) MakeMove(move Move) {
+	color := board.GetPieceAtSpace(move.StartingSpace).Color
+
+	if color == "" {
+		// error!
+	} else {
+		piece := Piece{Color: color, Space: move.TargetSpace}
+		board.PlacePiece(piece)
+		board.RemovePieceAtSpace(move.StartingSpace)
+	}
+}
+
+func (board *Board) RemovePieceAtSpace(space Space) {
+	for i, piece := range board.Pieces {
+		if SameSpace(piece.Space, space) {
+			board.Pieces[i] = Piece{}
+		}
+	}
+}
+
 func (board *Board) PlacePiece(piece Piece) (Piece, bool) {
 	if board.GetPieceAtSpace(piece.Space).Color == "" {
 		board.addPiece(piece)
@@ -65,14 +85,14 @@ func (board *Board) ConsolePrint() {
 			row.WriteString(printableSpace)
 		}
 		if i%8 == 7 {
-			row.WriteString("\n")
+			row.WriteString(fmt.Sprintf("  %d\n", (i/8)+1))
 			rows = append(rows, row.String())
 			row.Reset()
 		}
 	}
 
 	fmt.Println(reverseRows(rows))
-	fmt.Println("  1  2  3  4  5  6  7  8")
+	fmt.Println("  a  b  c  d  e  f  g  h")
 	return
 }
 

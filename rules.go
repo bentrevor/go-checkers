@@ -1,5 +1,7 @@
 package checkers
 
+import "fmt"
+
 type Move struct {
 	StartingSpace Space
 	TargetSpace   Space
@@ -28,6 +30,8 @@ func (board *Board) movesForSpace(startingSpace Space, color string) []Move {
 
 	if leftMove, ok := tryLeftMove(board, startingSpace, nextRank); ok {
 		moves = append(moves, leftMove)
+	} else {
+		fmt.Println("\n\nasdfadsfnasdasndfafnd\nfsad\nafds\n\n")
 	}
 
 	if rightMove, ok := tryRightMove(board, startingSpace, nextRank); ok {

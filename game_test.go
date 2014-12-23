@@ -13,7 +13,7 @@ type MockPlayer struct {
 }
 
 func (*MockPlayer) GetMove(board *Board) Move {
-	return Move{}
+	return Move{StartingSpace: C3, TargetSpace: D4}
 }
 
 func (MockPlayer) Color() string {
@@ -31,5 +31,14 @@ func TestGame_WhiteGoesFirst(t *testing.T) {
 func TestGame_TogglesPlayers(t *testing.T) {
 	game.CurrentPlayer = NewMockPlayer()
 	game.NextTurn()
+
 	assertEquals(t, "black", game.CurrentColor())
+}
+
+func TestGame_MakesMovesOnTheBoard(t *testing.T) {
+	game.CurrentPlayer = NewMockPlayer()
+	game.NextTurn()
+
+	assertEquals(t, "white", game.Board.GetPieceAtSpace(D4).Color)
+	assertEquals(t, "", game.Board.GetPieceAtSpace(C3).Color)
 }

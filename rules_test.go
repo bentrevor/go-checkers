@@ -7,6 +7,7 @@ import (
 )
 
 func TestRules_KnowsWhereAPieceCanMove(t *testing.T) {
+	board := NewGameBoard()
 	whitePiece := board.GetPieceAtSpace(G3)
 	blackPiece := board.GetPieceAtSpace(H6)
 
