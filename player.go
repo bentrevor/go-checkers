@@ -19,15 +19,20 @@ func NewPlayer(color string) Player {
 	return &HumanPlayer{color: color}
 }
 
-func (*HumanPlayer) GetMove(board *Board) Move {
+func (hp *HumanPlayer) GetMove(board *Board) Move {
 	in := bufio.NewReader(os.Stdin)
-	_, err := in.ReadString('\n')
+	input, err := in.ReadString('\n')
 
 	if err != nil {
-		fmt.Println("\n\n\n              error!\n\n", err, "\n\n--------------------\n")
+		fmt.Println("no")
+		return hp.GetMove(board)
 	}
 
-	return Move{}
+	return MoveFromString(input)
+}
+
+func MoveFromString(input string) Move {
+	return Move{StartingSpace: NewSpace(input[0:2]), TargetSpace: NewSpace(input[5:7])}
 }
 
 func (player *HumanPlayer) Color() string {
