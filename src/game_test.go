@@ -6,14 +6,22 @@ import (
 	. "github.com/bentrevor/checkers/src"
 )
 
-var game = NewGame()
+const fakeInput = "c3 - d4"
 
-type MockBoard struct{}
+var fakeIO = MockIO{}
+var game = NewGame(fakeIO)
+
 type MockPlayer struct {
 	color string
 }
 
-func (MockBoard) ConsolePrint() {}
+type MockIO struct{}
+
+func (MockIO) GetInput() (string, error) {
+	return fakeInput, nil
+}
+
+func (MockIO) PrintBoard(b Board) {}
 
 func (MockPlayer) GetMove(board Board) Move {
 	return Move{StartingSpace: C3, TargetSpace: D4}
@@ -21,10 +29,6 @@ func (MockPlayer) GetMove(board Board) Move {
 
 func (MockPlayer) Color() string {
 	return "white"
-}
-
-func NewMockBoard() Board {
-	return &MockBoard{}
 }
 
 func NewMockPlayer() Player {
@@ -37,7 +41,7 @@ func TestGame_WhiteGoesFirst(t *testing.T) {
 
 func TestGame_TogglesPlayers(t *testing.T) {
 	game.CurrentPlayer = NewMockPlayer()
-	game.Board = NewMockBoard()
+	game.Board = NewGameBoard()
 	game.NextTurn()
 
 	assertEquals(t, "black", game.CurrentColor())
@@ -51,5 +55,5 @@ func TestGame_MakesMovesOnTheBoard(t *testing.T) {
 }
 
 func TestGame_ValidatesMoves(t *testing.T) {
-	assert(t, game.InvalidInput(Move{B4, C5}), "invalid move - no piece at d4")
+	assert(t, game.InvalidInput(Move{B4, C5}), "invalid move - no piece at starting space")
 }

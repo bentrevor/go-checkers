@@ -1,17 +1,8 @@
 package checkers
 
-import (
-	"bytes"
-	"fmt"
-)
-
 type Piece struct {
 	Color string
 	Space Space
-}
-
-type IBoard interface {
-	ConsolePrint()
 }
 
 type Board struct {
@@ -66,41 +57,6 @@ func (board *Board) PlacePiece(piece Piece) (Piece, bool) {
 		return piece, false
 	}
 }
-
-func (board Board) ConsolePrint() {
-	fmt.Println()
-	spaces := []Space{}
-	emptySpace := "|_|"
-	var row bytes.Buffer
-	rows := []string{}
-
-	for _, piece := range board.Pieces {
-		spaces = append(spaces, piece.Space)
-	}
-
-	for i := 0; i < 64; i++ {
-		space := SpaceForIndex(i)
-		piece := board.GetPieceAtSpace(space)
-
-		if piece.Color == "" {
-			row.WriteString(emptySpace)
-		} else {
-			printableSpace := fmt.Sprintf("|%c|", piece.Color[0])
-			row.WriteString(printableSpace)
-		}
-		if i%8 == 7 {
-			row.WriteString(fmt.Sprintf("  %d\n", (i/8)+1))
-			rows = append(rows, row.String())
-			row.Reset()
-		}
-	}
-
-	fmt.Println(reverseRows(rows))
-	fmt.Println("  a  b  c  d  e  f  g  h")
-	return
-}
-
-// private
 
 func reverseRows(rows []string) []string {
 	length := len(rows)

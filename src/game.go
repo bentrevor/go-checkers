@@ -1,16 +1,23 @@
 package checkers
 
 type Game struct {
-	Board         IBoard
+	Board         Board
 	CurrentPlayer Player
 	OtherPlayer   Player
+	Io            IO
 }
 
-func NewGame() Game {
+type IO interface {
+	PrintBoard(Board)
+	GetInput() (string, error)
+}
+
+func NewGame(io IO) Game {
 	return Game{
 		Board:         NewGameBoard(),
 		CurrentPlayer: NewPlayer("white"),
 		OtherPlayer:   NewPlayer("black"),
+		Io:            io,
 	}
 }
 
@@ -23,7 +30,7 @@ func NewGameWithBoard(board Board) Game {
 }
 
 func (game *Game) NextTurn() {
-	game.Board.ConsolePrint()
+	game.Io.PrintBoard(game.Board)
 
 	move := game.CurrentPlayer.GetMove(game.Board)
 	for game.InvalidInput(move) {
