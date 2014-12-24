@@ -1,7 +1,5 @@
 package checkers
 
-import "fmt"
-
 type Move struct {
 	StartingSpace Space
 	TargetSpace   Space
@@ -10,14 +8,15 @@ type Move struct {
 func MovesForPiece(piece Piece, board *Board) []Move {
 	space := piece.Space
 
-	return board.movesForSpace(space, piece.Color)
+	moves := board.MovesForSpace(space, piece.Color)
+	return moves
 }
 
 func gameOver(board *Board) bool {
 	return false
 }
 
-func (board *Board) movesForSpace(startingSpace Space, color string) []Move {
+func (board *Board) MovesForSpace(startingSpace Space, color string) []Move {
 	moves := []Move{}
 
 	nextRank := 0
@@ -30,8 +29,6 @@ func (board *Board) movesForSpace(startingSpace Space, color string) []Move {
 
 	if leftMove, ok := tryLeftMove(board, startingSpace, nextRank); ok {
 		moves = append(moves, leftMove)
-	} else {
-		fmt.Println("\n\nasdfadsfnasdasndfafnd\nfsad\nafds\n\n")
 	}
 
 	if rightMove, ok := tryRightMove(board, startingSpace, nextRank); ok {
@@ -42,7 +39,17 @@ func (board *Board) movesForSpace(startingSpace Space, color string) []Move {
 }
 
 func IsLegalMove(move Move, board *Board, color string) bool {
-	return true
+	if color != board.GetPieceAtSpace(move.StartingSpace).Color {
+		return false
+	} else {
+		moves := board.MovesForSpace(move.StartingSpace, color)
+
+		if IncludesMove(moves, move) {
+			return true
+		} else {
+			return false
+		}
+	}
 }
 
 func tryLeftMove(board *Board, startingSpace Space, nextRank int) (Move, bool) {

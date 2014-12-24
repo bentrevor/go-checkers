@@ -49,7 +49,7 @@ func TestRules_KnowsWhenAMoveIsValid(t *testing.T) {
 
 	board.PlacePiece(Piece{Color: "black", Space: F4})
 	move = Move{StartingSpace: E3, TargetSpace: G5}
-	assert(t, !IsLegalMove(move, board, "white"), "valid white capture move")
+	assert(t, IsLegalMove(move, board, "white"), "valid white capture move")
 }
 
 func TestRules_KnowsWhenAMoveIsInvalid(t *testing.T) {
@@ -63,6 +63,6 @@ func TestRules_KnowsWhenAMoveIsInvalid(t *testing.T) {
 	move = Move{StartingSpace: E3, TargetSpace: F4}
 	assert(t, !IsLegalMove(move, board, "white"), "invalid white move - moving into an occupied square")
 
-	move = Move{StartingSpace: F4, TargetSpace: G3}
+	move = Move{StartingSpace: F4, TargetSpace: E3}
 	assert(t, !IsLegalMove(move, board, "black"), "invalid black move - moving into an occupied square")
 }
