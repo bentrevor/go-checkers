@@ -10,15 +10,19 @@ type Piece struct {
 	Space Space
 }
 
+type IBoard interface {
+	ConsolePrint()
+}
+
 type Board struct {
 	Pieces []Piece
 }
 
-func NewEmptyBoard() *Board {
-	return &Board{make([]Piece, 24, 32)}
+func NewEmptyBoard() Board {
+	return Board{make([]Piece, 24, 32)}
 }
 
-func NewGameBoard() *Board {
+func NewGameBoard() Board {
 	board := NewEmptyBoard()
 	board.createInitialPieces()
 	return board
@@ -63,7 +67,7 @@ func (board *Board) PlacePiece(piece Piece) (Piece, bool) {
 	}
 }
 
-func (board *Board) ConsolePrint() {
+func (board Board) ConsolePrint() {
 	fmt.Println()
 	spaces := []Space{}
 	emptySpace := "|_|"

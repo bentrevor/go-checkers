@@ -8,16 +8,23 @@ import (
 
 var game = NewGame()
 
+type MockBoard struct{}
 type MockPlayer struct {
 	color string
 }
 
-func (*MockPlayer) GetMove(board *Board) Move {
+func (MockBoard) ConsolePrint() {}
+
+func (MockPlayer) GetMove(board Board) Move {
 	return Move{StartingSpace: C3, TargetSpace: D4}
 }
 
 func (MockPlayer) Color() string {
 	return "white"
+}
+
+func NewMockBoard() Board {
+	return &MockBoard{}
 }
 
 func NewMockPlayer() Player {
@@ -30,6 +37,7 @@ func TestGame_WhiteGoesFirst(t *testing.T) {
 
 func TestGame_TogglesPlayers(t *testing.T) {
 	game.CurrentPlayer = NewMockPlayer()
+	game.Board = NewMockBoard()
 	game.NextTurn()
 
 	assertEquals(t, "black", game.CurrentColor())

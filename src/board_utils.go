@@ -37,7 +37,7 @@ func SpaceColorForIndex(index int) string {
 	}
 }
 
-func leftTargetSpace(board *Board, space Space) Space {
+func leftTargetSpace(board Board, space Space) Space {
 	color := board.GetPieceAtSpace(space).Color
 	nextRank := 0
 	nextFile := decFile(space.File)

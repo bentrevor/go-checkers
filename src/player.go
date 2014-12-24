@@ -7,7 +7,7 @@ import (
 )
 
 type Player interface {
-	GetMove(*Board) Move
+	GetMove(Board) Move
 	Color() string
 }
 
@@ -19,7 +19,7 @@ func NewPlayer(color string) Player {
 	return &HumanPlayer{color: color}
 }
 
-func (hp *HumanPlayer) GetMove(board *Board) Move {
+func (hp *HumanPlayer) GetMove(board Board) Move {
 	in := bufio.NewReader(os.Stdin)
 	input, err := in.ReadString('\n')
 

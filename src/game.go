@@ -1,7 +1,7 @@
 package checkers
 
 type Game struct {
-	Board         *Board
+	Board         IBoard
 	CurrentPlayer Player
 	OtherPlayer   Player
 }
@@ -14,7 +14,7 @@ func NewGame() Game {
 	}
 }
 
-func NewGameWithBoard(board *Board) Game {
+func NewGameWithBoard(board Board) Game {
 	return Game{
 		Board:         board,
 		CurrentPlayer: NewPlayer("white"),
