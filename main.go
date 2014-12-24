@@ -1,7 +1,7 @@
-package checkers
+package main
 
-import "fmt"
+import . "github.com/bentrevor/checkers/src"
 
 func main() {
-	fmt.Println("asdf")
+	NewGame().Start()
 }

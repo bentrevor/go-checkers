@@ -27,6 +27,7 @@ func NewGameWithBoard(board *Board) Game {
 }
 
 func (game *Game) NextTurn() {
+	game.Board.ConsolePrint()
 	move := game.CurrentPlayer.GetMove(game.Board)
 
 	for invalidInput(move) {
@@ -42,6 +43,7 @@ func invalidInput(move Move) bool {
 }
 
 func (game *Game) Start() {
+	fmt.Println("starting game:")
 	for !gameOver(game.Board) {
 		fmt.Println("asdf")
 		game.NextTurn()
