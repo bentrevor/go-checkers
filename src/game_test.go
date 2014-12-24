@@ -3,7 +3,7 @@ package checkers_test
 import (
 	"testing"
 
-	. "github.com/bentrevor/checkers"
+	. "github.com/bentrevor/checkers/src"
 )
 
 var game = NewGame()
@@ -37,8 +37,11 @@ func TestGame_TogglesPlayers(t *testing.T) {
 
 func TestGame_MakesMovesOnTheBoard(t *testing.T) {
 	game.CurrentPlayer = NewMockPlayer()
-	game.NextTurn()
 
 	assertEquals(t, "white", game.Board.GetPieceAtSpace(D4).Color)
 	assertEquals(t, "", game.Board.GetPieceAtSpace(C3).Color)
+}
+
+func TestGame_ValidatesMoves(t *testing.T) {
+	assert(t, game.InvalidInput(Move{B4, C5}), "invalid move - no piece at d4")
 }

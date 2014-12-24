@@ -1,9 +1,5 @@
 package checkers
 
-import (
-	"fmt"
-)
-
 type Game struct {
 	Board         *Board
 	CurrentPlayer Player
@@ -28,9 +24,9 @@ func NewGameWithBoard(board *Board) Game {
 
 func (game *Game) NextTurn() {
 	game.Board.ConsolePrint()
-	move := game.CurrentPlayer.GetMove(game.Board)
 
-	for invalidInput(move) {
+	move := game.CurrentPlayer.GetMove(game.Board)
+	for game.InvalidInput(move) {
 		move = game.CurrentPlayer.GetMove(game.Board)
 	}
 
@@ -38,14 +34,15 @@ func (game *Game) NextTurn() {
 	game.togglePlayers()
 }
 
-func invalidInput(move Move) bool {
-	return false
+func (game *Game) InvalidInput(move Move) bool {
+	board := game.Board
+	color := game.CurrentPlayer.Color()
+
+	return !IsLegalMove(move, board, color)
 }
 
 func (game *Game) Start() {
-	fmt.Println("starting game:")
 	for !gameOver(game.Board) {
-		fmt.Println("asdf")
 		game.NextTurn()
 	}
 }

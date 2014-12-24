@@ -3,7 +3,7 @@ package checkers_test
 import (
 	"testing"
 
-	. "github.com/bentrevor/checkers"
+	. "github.com/bentrevor/checkers/src"
 )
 
 func TestRules_KnowsWhereAPieceCanMove(t *testing.T) {

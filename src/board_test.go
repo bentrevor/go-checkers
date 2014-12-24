@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	. "github.com/bentrevor/checkers"
+	. "github.com/bentrevor/checkers/src"
 )
 
 var board = NewGameBoard()
