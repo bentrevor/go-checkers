@@ -8,23 +8,26 @@ import (
 
 const fakeInput = "c3 - d4"
 
-var fakeIO = MockIO{}
-var game = NewGame(fakeIO)
+var player1 = NewHumanPlayer("white")
+var player2 = NewHumanPlayer("black")
+
+var game = NewGame(player1, player2, MockOutput{})
 
 type MockPlayer struct {
 	color string
 }
 
-type MockIO struct{}
+type MockInput struct{}
+type MockOutput struct{}
 
-func (MockIO) GetInput() (string, error) {
+func (MockInput) GetInput() (string, error) {
 	return fakeInput, nil
 }
 
-func (MockIO) PrintBoard(b Board) {}
+func (MockOutput) PrintBoard(b Board) {}
 
 func (MockPlayer) GetMove(board Board) Move {
-	return Move{StartingSpace: C3, TargetSpace: D4}
+	return MoveFromString(fakeInput)
 }
 
 func (MockPlayer) Color() string {
@@ -40,6 +43,8 @@ func TestGame_WhiteGoesFirst(t *testing.T) {
 }
 
 func TestGame_TogglesPlayers(t *testing.T) {
+	assertEquals(t, "white", game.CurrentColor())
+
 	game.CurrentPlayer = NewMockPlayer()
 	game.Board = NewGameBoard()
 	game.NextTurn()

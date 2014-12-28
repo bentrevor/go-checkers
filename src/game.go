@@ -4,7 +4,7 @@ type Game struct {
 	Board         Board
 	CurrentPlayer Player
 	OtherPlayer   Player
-	Io            IO
+	Output        Output
 }
 
 type IO interface {
@@ -12,25 +12,25 @@ type IO interface {
 	GetInput() (string, error)
 }
 
-func NewGame(io IO) Game {
-	return Game{
-		Board:         NewGameBoard(),
-		CurrentPlayer: NewPlayer("white"),
-		OtherPlayer:   NewPlayer("black"),
-		Io:            io,
-	}
+type Input interface {
+	GetInput() (string, error)
 }
 
-func NewGameWithBoard(board Board) Game {
+type Output interface {
+	PrintBoard(Board)
+}
+
+func NewGame(player1 Player, player2 Player, output Output) Game {
 	return Game{
-		Board:         board,
-		CurrentPlayer: NewPlayer("white"),
-		OtherPlayer:   NewPlayer("black"),
+		Board:         NewGameBoard(),
+		CurrentPlayer: player1,
+		OtherPlayer:   player2,
+		Output:        output,
 	}
 }
 
 func (game *Game) NextTurn() {
-	game.Io.PrintBoard(game.Board)
+	game.Output.PrintBoard(game.Board)
 
 	move := game.CurrentPlayer.GetMove(game.Board)
 	for game.InvalidInput(move) {
