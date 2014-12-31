@@ -33,7 +33,7 @@ func (game *Game) NextTurn() {
 	game.Output.PrintBoard(game.Board)
 
 	move := game.CurrentPlayer.GetMove(game.Board)
-	for !game.ValidInput(move) {
+	for !game.IsValidMove(move) {
 		move = game.CurrentPlayer.GetMove(game.Board)
 	}
 
@@ -41,7 +41,7 @@ func (game *Game) NextTurn() {
 	game.togglePlayers()
 }
 
-func (game *Game) ValidInput(move Move) bool {
+func (game *Game) IsValidMove(move Move) bool {
 	board := game.Board
 	color := game.CurrentPlayer.Color()
 
@@ -49,7 +49,7 @@ func (game *Game) ValidInput(move Move) bool {
 }
 
 func (game *Game) Start() {
-	for !gameOver(game.Board) {
+	for !IsGameOver(game.Board) {
 		game.NextTurn()
 	}
 }

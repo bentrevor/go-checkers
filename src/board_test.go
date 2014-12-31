@@ -50,8 +50,8 @@ func TestBoard_CanRemovePieces(t *testing.T) {
 
 func TestBoard_CanMakeMoves(t *testing.T) {
 	board := Board{}
-	piece := Piece{Color: White, Space: G3}
-	board.PlacePiece(piece)
+	whitePiece := Piece{Color: White, Space: G3}
+	board.PlacePiece(whitePiece)
 	move := Move{StartingSpace: G3, TargetSpace: H4}
 
 	board.MakeMove(move)
@@ -61,4 +61,14 @@ func TestBoard_CanMakeMoves(t *testing.T) {
 
 	assertEquals(t, White, h4Piece.Color)
 	assertEquals(t, NoColor, g3Piece.Color)
+
+	blackPiece := Piece{Color: Black, Space: G5}
+	board.PlacePiece(blackPiece)
+
+	captureMove := Move{StartingSpace: H4, TargetSpace: F6}
+	board.MakeMove(captureMove)
+
+	g5Piece, _ := board.GetPieceAtSpace(G5)
+
+	assertEquals(t, NoColor, g5Piece.Color)
 }

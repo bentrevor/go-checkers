@@ -12,22 +12,22 @@ func MovesForPiece(piece Piece, board Board) []Move {
 	return moves
 }
 
-func MoveFromString(input string) (Move, bool) {
+func MoveFromString(input string) (Move, string) {
 	if len(input) != 7 {
-		return Move{}, false
+		return Move{}, "wrong length: enter a move like 'c3 - d4'"
 	} else {
 		startingSpace := NewSpace(input[0:2])
 		targetSpace := NewSpace(input[5:7])
 
 		if onBoard(startingSpace) && onBoard(targetSpace) {
-			return Move{StartingSpace: startingSpace, TargetSpace: targetSpace}, true
+			return Move{StartingSpace: startingSpace, TargetSpace: targetSpace}, ""
 		} else {
-			return Move{}, false
+			return Move{}, "enter real moves, dummy"
 		}
 	}
 }
 
-func gameOver(board Board) bool {
+func IsGameOver(board Board) bool {
 	return false
 }
 

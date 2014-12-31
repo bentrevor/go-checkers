@@ -21,7 +21,7 @@ func NewGameBoard() Board {
 
 func (board *Board) GetPieceAtSpace(space Space) (Piece, bool) {
 	for _, piece := range board.Pieces {
-		if SameSpace(piece.Space, space) {
+		if IsSameSpace(piece.Space, space) {
 			return piece, true
 		}
 	}
@@ -38,21 +38,27 @@ func (board *Board) MakeMove(move Move) {
 		newPiece := Piece{Color: piece.Color, Space: move.TargetSpace}
 		board.PlacePiece(newPiece)
 		board.RemovePieceAtSpace(move.StartingSpace)
+
+		if isCaptureMove(move) {
+			capturedSpace := capturedSpace(move)
+
+			board.RemovePieceAtSpace(capturedSpace)
+		}
 	}
 }
 
 func (board *Board) RemovePieceAtSpace(space Space) {
 	for i, piece := range board.Pieces {
-		if SameSpace(piece.Space, space) {
+		if IsSameSpace(piece.Space, space) {
 			board.Pieces[i] = Piece{}
 		}
 	}
 }
 
 func (board *Board) PlacePiece(piece Piece) bool {
-	_, foundPiece := board.GetPieceAtSpace(piece.Space)
+	_, pieceAtSpace := board.GetPieceAtSpace(piece.Space)
 
-	if !foundPiece {
+	if !pieceAtSpace {
 		board.addPiece(piece)
 		return true
 	} else {

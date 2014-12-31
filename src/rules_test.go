@@ -72,13 +72,13 @@ func TestRules_ConvertsStringToMove(t *testing.T) {
 	move := Move{StartingSpace: A3, TargetSpace: B4}
 
 	parsedMove, _ := MoveFromString(input)
-	assert(t, SameMove(move, parsedMove), "valid move from string")
+	assert(t, IsSameMove(move, parsedMove), "valid move from string")
 }
 
 func TestRules_ValidatesInputFormat(t *testing.T) {
-	_, validWithWrongLength := MoveFromString("a3-b4")
-	assert(t, !validWithWrongLength, "invalid move from string - wrong input length")
+	_, wrongLengthErrorMessage := MoveFromString("a3-b4")
+	assert(t, (len(wrongLengthErrorMessage) > 0), "invalid move from string - wrong input length")
 
-	_, validWithNonsenseSpaces := MoveFromString("xx - yy")
-	assert(t, !validWithNonsenseSpaces, "invalid move from string - garbage input")
+	_, nonsenseInputErrorMessage := MoveFromString("xx - yy")
+	assert(t, (len(nonsenseInputErrorMessage) > 0), "invalid move from string - garbage input")
 }

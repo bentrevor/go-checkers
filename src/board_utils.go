@@ -1,8 +1,10 @@
 package checkers
 
+import "math"
+
 func IncludesMove(moves []Move, move Move) bool {
 	for _, any_move := range moves {
-		if SameMove(move, any_move) {
+		if IsSameMove(move, any_move) {
 			return true
 		}
 	}
@@ -10,12 +12,12 @@ func IncludesMove(moves []Move, move Move) bool {
 	return false
 }
 
-func SameMove(move1 Move, move2 Move) bool {
-	return SameSpace(move1.StartingSpace, move2.StartingSpace) &&
-		SameSpace(move1.TargetSpace, move2.TargetSpace)
+func IsSameMove(move1 Move, move2 Move) bool {
+	return IsSameSpace(move1.StartingSpace, move2.StartingSpace) &&
+		IsSameSpace(move1.TargetSpace, move2.TargetSpace)
 }
 
-func SameSpace(pieceSpace Space, targetSpace Space) bool {
+func IsSameSpace(pieceSpace Space, targetSpace Space) bool {
 	return pieceSpace.Rank == targetSpace.Rank &&
 		pieceSpace.File == targetSpace.File
 }
@@ -154,4 +156,28 @@ func getOddAndEvenColor(index int) (Color, Color) {
 	} else {
 		return Black, White
 	}
+}
+
+func isCaptureMove(move Move) bool {
+	rankDelta := math.Abs(float64(move.StartingSpace.Rank - move.TargetSpace.Rank))
+
+	// going to have to fix this for double jumps
+	return rankDelta > 1
+}
+
+func capturedSpace(move Move) Space {
+	capturedRank := rankBetween(move.StartingSpace.Rank, move.TargetSpace.Rank)
+	capturedFile := fileBetween(move.StartingSpace.File, move.TargetSpace.File)
+
+	return Space{Rank: capturedRank, File: capturedFile}
+}
+
+func rankBetween(rank1 int, rank2 int) int {
+	return (rank1 + rank2) / 2
+}
+
+func fileBetween(file1 string, file2 string) string {
+	captureFile := (file1[0] + file2[0]) / 2
+
+	return string(captureFile)
 }

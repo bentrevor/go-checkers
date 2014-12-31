@@ -17,11 +17,12 @@ func (c ConsoleInput) GetMove(board Board) Move {
 		// TODO
 	}
 
-	move, validMove := MoveFromString(input)
+	move, errorMessage := MoveFromString(input[0 : len(input)-1])
 
-	if validMove {
+	if len(errorMessage) == 0 {
 		return move
 	} else {
+		fmt.Println(errorMessage)
 		return c.GetMove(board)
 	}
 }

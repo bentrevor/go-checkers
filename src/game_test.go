@@ -64,9 +64,5 @@ func TestGame_MakesMovesOnTheBoard(t *testing.T) {
 }
 
 func TestGame_ValidatesMoves(t *testing.T) {
-	assert(t, !game.ValidInput(Move{B4, C5}), "invalid move - no piece at starting space")
-}
-
-func TestGame_ValidatesInputFormat(t *testing.T) {
-	assert(t, !game.ValidInput(Move{B4, C5}), "invalid move - no piece at starting space")
+	assert(t, !game.IsValidMove(Move{B4, C5}), "invalid move - no piece at starting space")
 }

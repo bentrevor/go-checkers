@@ -38,11 +38,11 @@ func TestBoardUtils_GetsSpacesInADirection(t *testing.T) {
 	rightNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, White, "right")
 	rightCaptureSpace, _ := GetCaptureSpaceInDirection(space, White, "right")
 
-	assert(t, SameSpace(C5, leftNonCaptureSpace), "white left non capture space")
-	assert(t, SameSpace(B6, leftCaptureSpace), "white left capture space")
+	assert(t, IsSameSpace(C5, leftNonCaptureSpace), "white left non capture space")
+	assert(t, IsSameSpace(B6, leftCaptureSpace), "white left capture space")
 
-	assert(t, SameSpace(E5, rightNonCaptureSpace), "white right non capture space")
-	assert(t, SameSpace(F6, rightCaptureSpace), "white right capture space")
+	assert(t, IsSameSpace(E5, rightNonCaptureSpace), "white right non capture space")
+	assert(t, IsSameSpace(F6, rightCaptureSpace), "white right capture space")
 }
 
 func TestBoardUtils_GetsSpacesInADirectionAtTheEdgeOfTheBoard(t *testing.T) {
@@ -58,7 +58,7 @@ func TestBoardUtils_GetsSpacesInADirectionAtTheEdgeOfTheBoard(t *testing.T) {
 	_, rightNonCaptureSpaceCreated := GetNonCaptureSpaceInDirection(space, Black, "right")
 	_, rightCaptureSpaceCreated := GetCaptureSpaceInDirection(space, Black, "right")
 
-	assert(t, SameSpace(G1, leftNonCaptureSpace), "left non capture space")
+	assert(t, IsSameSpace(G1, leftNonCaptureSpace), "left non capture space")
 	assert(t, !leftCaptureSpaceCreated, "left capture space shouldn't exist")
 
 	assert(t, !rightNonCaptureSpaceCreated, "right non capture space shouldn't exist")
