@@ -40,7 +40,7 @@ func (ConsoleOutput) PrintBoard(board Board) {
 		space := SpaceForIndex(i)
 		piece := board.GetPieceAtSpace(space)
 
-		if piece.Color == "" {
+		if piece.Color == NoColor {
 			row.WriteString(emptySpace)
 		} else {
 			printableSpace := fmt.Sprintf("|%c|", piece.Color[0])

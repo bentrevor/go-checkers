@@ -16,12 +16,12 @@ func gameOver(board Board) bool {
 	return false
 }
 
-func (board Board) MovesForSpace(startingSpace Space, color string) []Move {
+func (board Board) MovesForSpace(startingSpace Space, color Color) []Move {
 	moves := []Move{}
 
 	nextRank := 0
 
-	if color == "white" {
+	if color == White {
 		nextRank = startingSpace.Rank + 1
 	} else {
 		nextRank = startingSpace.Rank - 1
@@ -38,7 +38,7 @@ func (board Board) MovesForSpace(startingSpace Space, color string) []Move {
 	return moves
 }
 
-func IsLegalMove(move Move, board Board, color string) bool {
+func IsLegalMove(move Move, board Board, color Color) bool {
 	if color != board.GetPieceAtSpace(move.StartingSpace).Color {
 		return false
 	} else {
@@ -79,13 +79,13 @@ func tryRightMove(board Board, startingSpace Space, nextRank int) (Move, bool) {
 }
 
 func getNextMove(startingSpace Space, targetSpace Space, board Board) (Move, bool) {
-	if board.GetPieceAtSpace(targetSpace).Color == "" {
+	if board.GetPieceAtSpace(targetSpace).Color == NoColor {
 		move := Move{StartingSpace: startingSpace, TargetSpace: targetSpace}
 		return move, true
 	} else {
 		nextSpace := getNextSpace(startingSpace, targetSpace)
 
-		if board.GetPieceAtSpace(nextSpace).Color == "" {
+		if board.GetPieceAtSpace(nextSpace).Color == NoColor {
 			move := Move{StartingSpace: startingSpace, TargetSpace: nextSpace}
 			return move, true
 		} else {

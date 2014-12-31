@@ -27,7 +27,7 @@ func SpaceForIndex(index int) Space {
 	return space
 }
 
-func SpaceColorForIndex(index int) string {
+func SpaceColorForIndex(index int) Color {
 	oddColor, evenColor := getOddAndEvenColor(index)
 
 	if index%2 == 0 {
@@ -42,7 +42,7 @@ func leftTargetSpace(board Board, space Space) Space {
 	nextRank := 0
 	nextFile := decFile(space.File)
 
-	if color == "black" {
+	if color == Black {
 		nextRank = space.Rank - 1
 	} else {
 		nextRank = space.Rank + 1
@@ -51,11 +51,11 @@ func leftTargetSpace(board Board, space Space) Space {
 	return Space{File: nextFile, Rank: nextRank}
 }
 
-func GetNonCaptureSpaceInDirection(space Space, color string, direction string) (Space, bool) {
+func GetNonCaptureSpaceInDirection(space Space, color Color, direction string) (Space, bool) {
 	nextRank := 0
 	nextFile := ""
 
-	if color == "black" {
+	if color == Black {
 		nextRank = space.Rank - 1
 	} else {
 		nextRank = space.Rank + 1
@@ -74,7 +74,7 @@ func GetNonCaptureSpaceInDirection(space Space, color string, direction string) 
 	}
 }
 
-func GetCaptureSpaceInDirection(space Space, color string, direction string) (Space, bool) {
+func GetCaptureSpaceInDirection(space Space, color Color, direction string) (Space, bool) {
 	if nonCaptureSpace, ok := GetNonCaptureSpaceInDirection(space, color, direction); ok {
 		return GetNonCaptureSpaceInDirection(nonCaptureSpace, color, direction)
 	}
@@ -121,13 +121,13 @@ func decFile(file string) string {
 	return string(file[0] - 1)
 }
 
-func initialPieceColorFor(index int) string {
+func initialPieceColorFor(index int) Color {
 	if index < 24 {
-		return "white"
+		return White
 	} else if index > 39 {
-		return "black"
+		return Black
 	} else {
-		return ""
+		return Color{}
 	}
 }
 
@@ -137,12 +137,12 @@ func onBoard(file string, rank int) bool {
 	return r
 }
 
-func getOddAndEvenColor(index int) (string, string) {
+func getOddAndEvenColor(index int) (Color, Color) {
 	row := index / 8
 
 	if row%2 == 0 {
-		return "white", "black"
+		return White, Black
 	} else {
-		return "black", "white"
+		return Black, White
 	}
 }

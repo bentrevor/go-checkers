@@ -2,19 +2,27 @@ package checkers
 
 type Player interface {
 	GetMove(Board) Move
-	Color() string
+	Color() Color
 }
 
 type MoveDecider interface {
 	GetMove(Board) Move
 }
 
+type Color string
+
+const (
+	NoColor Color = iota
+	White   Color
+	Black   Color
+)
+
 type HumanPlayer struct {
-	color       string
+	color       Color
 	MoveDecider ConsoleInput
 }
 
-func NewHumanPlayer(color string) Player {
+func NewHumanPlayer(color Color) Player {
 	return &HumanPlayer{color: color, MoveDecider: ConsoleInput{}}
 }
 

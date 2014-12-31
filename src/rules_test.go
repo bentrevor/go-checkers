@@ -28,7 +28,7 @@ func TestRules_KnowsWhereAPieceCanJump(t *testing.T) {
 	d6Piece := board.GetPieceAtSpace(D6)
 	f6Piece := board.GetPieceAtSpace(F6)
 
-	board.PlacePiece(Piece{Color: "white", Space: E5})
+	board.PlacePiece(Piece{Color: White, Space: E5})
 
 	d6Moves := MovesForPiece(d6Piece, board)
 	f6Moves := MovesForPiece(f6Piece, board)
@@ -42,27 +42,27 @@ func TestRules_KnowsWhereAPieceCanJump(t *testing.T) {
 
 func TestRules_KnowsWhenAMoveIsValid(t *testing.T) {
 	move := Move{StartingSpace: A3, TargetSpace: B4}
-	assert(t, IsLegalMove(move, board, "white"), "valid white noncapture move")
+	assert(t, IsLegalMove(move, board, White), "valid white noncapture move")
 
 	move = Move{StartingSpace: B6, TargetSpace: C5}
-	assert(t, IsLegalMove(move, board, "black"), "valid black noncapture move")
+	assert(t, IsLegalMove(move, board, Black), "valid black noncapture move")
 
-	board.PlacePiece(Piece{Color: "black", Space: F4})
+	board.PlacePiece(Piece{Color: Black, Space: F4})
 	move = Move{StartingSpace: E3, TargetSpace: G5}
-	assert(t, IsLegalMove(move, board, "white"), "valid white capture move")
+	assert(t, IsLegalMove(move, board, White), "valid white capture move")
 }
 
 func TestRules_KnowsWhenAMoveIsInvalid(t *testing.T) {
 	move := Move{StartingSpace: A3, TargetSpace: B4}
-	assert(t, !IsLegalMove(move, board, "black"), "invalid black move - wrong color")
+	assert(t, !IsLegalMove(move, board, Black), "invalid black move - wrong color")
 
 	move = Move{StartingSpace: A3, TargetSpace: A3}
-	assert(t, !IsLegalMove(move, board, "white"), "invalid white move - not a real move")
+	assert(t, !IsLegalMove(move, board, White), "invalid white move - not a real move")
 
-	board.PlacePiece(Piece{Color: "black", Space: F4})
+	board.PlacePiece(Piece{Color: Black, Space: F4})
 	move = Move{StartingSpace: E3, TargetSpace: F4}
-	assert(t, !IsLegalMove(move, board, "white"), "invalid white move - moving into an occupied square")
+	assert(t, !IsLegalMove(move, board, White), "invalid white move - moving into an occupied square")
 
 	move = Move{StartingSpace: F4, TargetSpace: E3}
-	assert(t, !IsLegalMove(move, board, "black"), "invalid black move - moving into an occupied square")
+	assert(t, !IsLegalMove(move, board, Black), "invalid black move - moving into an occupied square")
 }

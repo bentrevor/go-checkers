@@ -1,7 +1,7 @@
 package checkers
 
 type Piece struct {
-	Color string
+	Color Color
 	Space Space
 }
 
@@ -32,7 +32,7 @@ func (board *Board) GetPieceAtSpace(space Space) Piece {
 func (board *Board) MakeMove(move Move) {
 	color := board.GetPieceAtSpace(move.StartingSpace).Color
 
-	if color == "" {
+	if color == NoColor {
 		// error!
 	} else {
 		piece := Piece{Color: color, Space: move.TargetSpace}
@@ -50,7 +50,7 @@ func (board *Board) RemovePieceAtSpace(space Space) {
 }
 
 func (board *Board) PlacePiece(piece Piece) (Piece, bool) {
-	if board.GetPieceAtSpace(piece.Space).Color == "" {
+	if board.GetPieceAtSpace(piece.Space).Color == NoColor {
 		board.addPiece(piece)
 		return piece, true
 	} else {
@@ -94,7 +94,8 @@ func initialPieceAtIndex(index int) (Piece, bool) {
 	pieceColor := initialPieceColorFor(index)
 	spaceColor := SpaceColorForIndex(index)
 
-	if pieceColor == "" || spaceColor == "white" {
+	return Piece{}, false
+	if pieceColor == NoColor || spaceColor == White {
 		return Piece{}, false
 	} else {
 		piece := Piece{Color: pieceColor, Space: SpaceForIndex(index)}

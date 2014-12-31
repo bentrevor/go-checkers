@@ -7,18 +7,18 @@ import (
 )
 
 func TestBoardUtils_KnowsTheColorOfASpace(t *testing.T) {
-	assertEquals(t, SpaceColorForIndex(0), "black")
-	assertEquals(t, SpaceColorForIndex(1), "white")
-	assertEquals(t, SpaceColorForIndex(6), "black")
-	assertEquals(t, SpaceColorForIndex(7), "white")
+	assertEquals(t, SpaceColorForIndex(0), Black)
+	assertEquals(t, SpaceColorForIndex(1), White)
+	assertEquals(t, SpaceColorForIndex(6), Black)
+	assertEquals(t, SpaceColorForIndex(7), White)
 
-	assertEquals(t, SpaceColorForIndex(8), "white")
-	assertEquals(t, SpaceColorForIndex(9), "black")
-	assertEquals(t, SpaceColorForIndex(14), "white")
-	assertEquals(t, SpaceColorForIndex(15), "black")
+	assertEquals(t, SpaceColorForIndex(8), White)
+	assertEquals(t, SpaceColorForIndex(9), Black)
+	assertEquals(t, SpaceColorForIndex(14), White)
+	assertEquals(t, SpaceColorForIndex(15), Black)
 
-	assertEquals(t, SpaceColorForIndex(16), "black")
-	assertEquals(t, SpaceColorForIndex(17), "white")
+	assertEquals(t, SpaceColorForIndex(16), Black)
+	assertEquals(t, SpaceColorForIndex(17), White)
 }
 
 func TestBoardUtils_KnowsTheSpaceForAnIndex(t *testing.T) {
@@ -32,11 +32,11 @@ func TestBoardUtils_KnowsTheSpaceForAnIndex(t *testing.T) {
 func TestBoardUtils_GetsSpacesInADirection(t *testing.T) {
 	space := D4
 
-	leftNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, "white", "left")
-	leftCaptureSpace, _ := GetCaptureSpaceInDirection(space, "white", "left")
+	leftNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, White, "left")
+	leftCaptureSpace, _ := GetCaptureSpaceInDirection(space, White, "left")
 
-	rightNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, "white", "right")
-	rightCaptureSpace, _ := GetCaptureSpaceInDirection(space, "white", "right")
+	rightNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, White, "right")
+	rightCaptureSpace, _ := GetCaptureSpaceInDirection(space, White, "right")
 
 	assert(t, SameSpace(C5, leftNonCaptureSpace), "white left non capture space")
 	assert(t, SameSpace(B6, leftCaptureSpace), "white left capture space")
@@ -48,15 +48,15 @@ func TestBoardUtils_GetsSpacesInADirection(t *testing.T) {
 func TestBoardUtils_GetsSpacesInADirectionAtTheEdgeOfTheBoard(t *testing.T) {
 	board := NewEmptyBoard()
 	space := H2
-	piece := Piece{Color: "black", Space: space}
+	piece := Piece{Color: Black, Space: space}
 
 	board.PlacePiece(piece)
 
-	leftNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, "black", "left")
-	_, leftCaptureSpaceCreated := GetCaptureSpaceInDirection(space, "black", "left")
+	leftNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, Black, "left")
+	_, leftCaptureSpaceCreated := GetCaptureSpaceInDirection(space, Black, "left")
 
-	_, rightNonCaptureSpaceCreated := GetNonCaptureSpaceInDirection(space, "black", "right")
-	_, rightCaptureSpaceCreated := GetCaptureSpaceInDirection(space, "black", "right")
+	_, rightNonCaptureSpaceCreated := GetNonCaptureSpaceInDirection(space, Black, "right")
+	_, rightCaptureSpaceCreated := GetCaptureSpaceInDirection(space, Black, "right")
 
 	assert(t, SameSpace(G1, leftNonCaptureSpace), "left non capture space")
 	assert(t, !leftCaptureSpaceCreated, "left capture space shouldn't exist")
