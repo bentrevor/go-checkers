@@ -12,8 +12,19 @@ func MovesForPiece(piece Piece, board Board) []Move {
 	return moves
 }
 
-func MoveFromString(input string) Move {
-	return Move{StartingSpace: NewSpace(input[0:2]), TargetSpace: NewSpace(input[5:7])}
+func MoveFromString(input string) (Move, bool) {
+	if len(input) != 7 {
+		return Move{}, false
+	} else {
+		startingSpace := NewSpace(input[0:2])
+		targetSpace := NewSpace(input[5:7])
+
+		if onBoard(startingSpace) && onBoard(targetSpace) {
+			return Move{StartingSpace: startingSpace, TargetSpace: targetSpace}, true
+		} else {
+			return Move{}, false
+		}
+	}
 }
 
 func gameOver(board Board) bool {

@@ -17,7 +17,13 @@ func (c ConsoleInput) GetMove(board Board) Move {
 		// TODO
 	}
 
-	return MoveFromString(input)
+	move, validMove := MoveFromString(input)
+
+	if validMove {
+		return move
+	} else {
+		return c.GetMove(board)
+	}
 }
 
 func (ConsoleInput) GetInput() (string, error) {

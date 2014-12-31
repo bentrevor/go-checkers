@@ -68,6 +68,17 @@ func TestRules_KnowsWhenAMoveIsInvalid(t *testing.T) {
 }
 
 func TestRules_ConvertsStringToMove(t *testing.T) {
+	input := "a3 - b4"
 	move := Move{StartingSpace: A3, TargetSpace: B4}
-	assert(t, !IsLegalMove(move, board, Black), "invalid black move - wrong color")
+
+	parsedMove, _ := MoveFromString(input)
+	assert(t, SameMove(move, parsedMove), "valid move from string")
+}
+
+func TestRules_ValidatesInputFormat(t *testing.T) {
+	_, validWithWrongLength := MoveFromString("a3-b4")
+	assert(t, !validWithWrongLength, "invalid move from string - wrong input length")
+
+	_, validWithNonsenseSpaces := MoveFromString("xx - yy")
+	assert(t, !validWithNonsenseSpaces, "invalid move from string - garbage input")
 }

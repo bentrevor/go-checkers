@@ -73,8 +73,9 @@ func GetNonCaptureSpaceInDirection(space Space, color Color, direction string) (
 		nextFile = incFile(space.File)
 	}
 
-	if onBoard(nextFile, nextRank) {
-		return Space{File: nextFile, Rank: nextRank}, true
+	nonCaptureSpace := Space{File: nextFile, Rank: nextRank}
+	if onBoard(nonCaptureSpace) {
+		return nonCaptureSpace, true
 	} else {
 		return Space{}, false
 	}
@@ -135,9 +136,13 @@ func initialPieceColorFor(index int) Color {
 	}
 }
 
-func onBoard(file string, rank int) bool {
+func onBoard(space Space) bool {
+	rank := space.Rank
+	file := space.File
+
 	r := rank > 0 && rank < 8 &&
 		file >= "a" && file <= "h"
+
 	return r
 }
 

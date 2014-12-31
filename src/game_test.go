@@ -27,7 +27,8 @@ func (MockInput) GetInput() (string, error) {
 func (MockOutput) PrintBoard(b Board) {}
 
 func (MockPlayer) GetMove(board Board) Move {
-	return MoveFromString(fakeInput)
+	move, _ := MoveFromString(fakeInput)
+	return move
 }
 
 func (MockPlayer) Color() Color {
