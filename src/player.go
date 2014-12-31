@@ -12,9 +12,9 @@ type MoveDecider interface {
 type Color string
 
 const (
-	NoColor Color = iota
-	White   Color
-	Black   Color
+	NoColor Color = ""
+	White   Color = "white"
+	Black   Color = "black"
 )
 
 type HumanPlayer struct {
@@ -34,6 +34,6 @@ func (hp *HumanPlayer) GetMove(board Board) Move {
 	return hp.MoveDecider.GetMove(board)
 }
 
-func (player *HumanPlayer) Color() string {
+func (player *HumanPlayer) Color() Color {
 	return player.color
 }

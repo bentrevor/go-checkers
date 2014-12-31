@@ -127,7 +127,7 @@ func initialPieceColorFor(index int) Color {
 	} else if index > 39 {
 		return Black
 	} else {
-		return Color{}
+		return NoColor
 	}
 }
 

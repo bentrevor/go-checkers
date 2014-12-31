@@ -15,7 +15,7 @@ func NewEmptyBoard() Board {
 
 func NewGameBoard() Board {
 	board := NewEmptyBoard()
-	board.createInitialPieces()
+	board.placeInitialPieces()
 	return board
 }
 
@@ -69,7 +69,7 @@ func reverseRows(rows []string) []string {
 	return reversed
 }
 
-func (board *Board) createInitialPieces() {
+func (board *Board) placeInitialPieces() {
 	pieceIndex := 0
 
 	for i := 0; i < 64; i++ {
@@ -94,7 +94,6 @@ func initialPieceAtIndex(index int) (Piece, bool) {
 	pieceColor := initialPieceColorFor(index)
 	spaceColor := SpaceColorForIndex(index)
 
-	return Piece{}, false
 	if pieceColor == NoColor || spaceColor == White {
 		return Piece{}, false
 	} else {

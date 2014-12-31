@@ -54,7 +54,7 @@ func (game *Game) Start() {
 	}
 }
 
-func (game *Game) CurrentColor() string {
+func (game *Game) CurrentColor() Color {
 	return game.CurrentPlayer.Color()
 }
 

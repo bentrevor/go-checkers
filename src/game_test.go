@@ -56,7 +56,7 @@ func TestGame_MakesMovesOnTheBoard(t *testing.T) {
 	game.CurrentPlayer = NewMockPlayer()
 
 	assertEquals(t, White, game.Board.GetPieceAtSpace(D4).Color)
-	assertEquals(t, "", game.Board.GetPieceAtSpace(C3).Color)
+	assertEquals(t, NoColor, game.Board.GetPieceAtSpace(C3).Color)
 }
 
 func TestGame_ValidatesMoves(t *testing.T) {

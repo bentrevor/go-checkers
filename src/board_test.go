@@ -1,7 +1,6 @@
 package checkers_test
 
 import (
-	"fmt"
 	"testing"
 
 	. "github.com/bentrevor/checkers/src"
@@ -10,7 +9,6 @@ import (
 var board = NewGameBoard()
 
 func TestBoard_StartsWith24Pieces(t *testing.T) {
-	fmt.Println()
 	assertEquals(t, 24, len(board.Pieces))
 }
 
@@ -44,7 +42,7 @@ func TestBoard_CanPlaceAPiece(t *testing.T) {
 func TestBoard_CanRemovePieces(t *testing.T) {
 	board.RemovePieceAtSpace(G3)
 
-	assertEquals(t, "", board.GetPieceAtSpace(G3).Color)
+	assertEquals(t, NoColor, board.GetPieceAtSpace(G3).Color)
 }
 
 func TestBoard_CanMakeMoves(t *testing.T) {
@@ -56,5 +54,5 @@ func TestBoard_CanMakeMoves(t *testing.T) {
 	board.MakeMove(move)
 
 	assertEquals(t, White, board.GetPieceAtSpace(H4).Color)
-	assertEquals(t, "", board.GetPieceAtSpace(G3).Color)
+	assertEquals(t, NoColor, board.GetPieceAtSpace(G3).Color)
 }
