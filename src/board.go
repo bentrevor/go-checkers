@@ -19,24 +19,24 @@ func NewGameBoard() Board {
 	return board
 }
 
-func (board *Board) GetPieceAtSpace(space Space) Piece {
+func (board *Board) GetPieceAtSpace(space Space) (Piece, bool) {
 	for _, piece := range board.Pieces {
 		if SameSpace(piece.Space, space) {
-			return piece
+			return piece, true
 		}
 	}
 
-	return Piece{}
+	return Piece{}, false
 }
 
 func (board *Board) MakeMove(move Move) {
-	color := board.GetPieceAtSpace(move.StartingSpace).Color
+	piece, foundPiece := board.GetPieceAtSpace(move.StartingSpace)
 
-	if color == NoColor {
-		// error!
+	if !foundPiece {
+		// TODO
 	} else {
-		piece := Piece{Color: color, Space: move.TargetSpace}
-		board.PlacePiece(piece)
+		newPiece := Piece{Color: piece.Color, Space: move.TargetSpace}
+		board.PlacePiece(newPiece)
 		board.RemovePieceAtSpace(move.StartingSpace)
 	}
 }
@@ -49,12 +49,14 @@ func (board *Board) RemovePieceAtSpace(space Space) {
 	}
 }
 
-func (board *Board) PlacePiece(piece Piece) (Piece, bool) {
-	if board.GetPieceAtSpace(piece.Space).Color == NoColor {
+func (board *Board) PlacePiece(piece Piece) bool {
+	_, foundPiece := board.GetPieceAtSpace(piece.Space)
+
+	if !foundPiece {
 		board.addPiece(piece)
-		return piece, true
+		return true
 	} else {
-		return piece, false
+		return false
 	}
 }
 

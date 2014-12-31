@@ -12,6 +12,10 @@ func MovesForPiece(piece Piece, board Board) []Move {
 	return moves
 }
 
+func MoveFromString(input string) Move {
+	return Move{StartingSpace: NewSpace(input[0:2]), TargetSpace: NewSpace(input[5:7])}
+}
+
 func gameOver(board Board) bool {
 	return false
 }
@@ -39,7 +43,9 @@ func (board Board) MovesForSpace(startingSpace Space, color Color) []Move {
 }
 
 func IsLegalMove(move Move, board Board, color Color) bool {
-	if color != board.GetPieceAtSpace(move.StartingSpace).Color {
+	_, foundPiece := board.GetPieceAtSpace(move.StartingSpace)
+
+	if !foundPiece {
 		return false
 	} else {
 		moves := board.MovesForSpace(move.StartingSpace, color)
@@ -53,7 +59,7 @@ func IsLegalMove(move Move, board Board, color Color) bool {
 }
 
 func tryLeftMove(board Board, startingSpace Space, nextRank int) (Move, bool) {
-	if notOnLeftEdge(startingSpace) {
+	if !onLeftEdge(startingSpace) {
 		leftFile := decFile(startingSpace.File)
 		targetSpace := Space{File: leftFile, Rank: nextRank}
 
@@ -66,7 +72,7 @@ func tryLeftMove(board Board, startingSpace Space, nextRank int) (Move, bool) {
 }
 
 func tryRightMove(board Board, startingSpace Space, nextRank int) (Move, bool) {
-	if notOnRightEdge(startingSpace) {
+	if !onRightEdge(startingSpace) {
 		rightFile := incFile(startingSpace.File)
 		targetSpace := Space{File: rightFile, Rank: nextRank}
 
@@ -79,13 +85,16 @@ func tryRightMove(board Board, startingSpace Space, nextRank int) (Move, bool) {
 }
 
 func getNextMove(startingSpace Space, targetSpace Space, board Board) (Move, bool) {
-	if board.GetPieceAtSpace(targetSpace).Color == NoColor {
+	_, pieceAtTargetSpace := board.GetPieceAtSpace(targetSpace)
+
+	if !pieceAtTargetSpace {
 		move := Move{StartingSpace: startingSpace, TargetSpace: targetSpace}
 		return move, true
 	} else {
-		nextSpace := getNextSpace(startingSpace, targetSpace)
+		nextSpace := getNextSpaceInSameDirection(startingSpace, targetSpace)
+		_, pieceAtNextSpace := board.GetPieceAtSpace(nextSpace)
 
-		if board.GetPieceAtSpace(nextSpace).Color == NoColor {
+		if !pieceAtNextSpace {
 			move := Move{StartingSpace: startingSpace, TargetSpace: nextSpace}
 			return move, true
 		} else {

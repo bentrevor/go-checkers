@@ -33,7 +33,7 @@ func (game *Game) NextTurn() {
 	game.Output.PrintBoard(game.Board)
 
 	move := game.CurrentPlayer.GetMove(game.Board)
-	for game.InvalidInput(move) {
+	for !game.ValidInput(move) {
 		move = game.CurrentPlayer.GetMove(game.Board)
 	}
 
@@ -41,11 +41,11 @@ func (game *Game) NextTurn() {
 	game.togglePlayers()
 }
 
-func (game *Game) InvalidInput(move Move) bool {
+func (game *Game) ValidInput(move Move) bool {
 	board := game.Board
 	color := game.CurrentPlayer.Color()
 
-	return !IsLegalMove(move, board, color)
+	return IsLegalMove(move, board, color)
 }
 
 func (game *Game) Start() {
@@ -59,7 +59,7 @@ func (game *Game) CurrentColor() Color {
 }
 
 func (game *Game) togglePlayers() {
-	p := game.CurrentPlayer
+	playerThatJustMoved := game.CurrentPlayer
 	game.CurrentPlayer = game.OtherPlayer
-	game.OtherPlayer = p
+	game.OtherPlayer = playerThatJustMoved
 }

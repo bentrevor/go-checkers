@@ -14,7 +14,7 @@ func (c ConsoleInput) GetMove(board Board) Move {
 	input, err := c.GetInput()
 
 	if err != nil {
-		// error!
+		// TODO
 	}
 
 	return MoveFromString(input)
@@ -38,9 +38,9 @@ func (ConsoleOutput) PrintBoard(board Board) {
 
 	for i := 0; i < 64; i++ {
 		space := SpaceForIndex(i)
-		piece := board.GetPieceAtSpace(space)
+		piece, foundPiece := board.GetPieceAtSpace(space)
 
-		if piece.Color == NoColor {
+		if !foundPiece {
 			row.WriteString(emptySpace)
 		} else {
 			printableSpace := fmt.Sprintf("|%c|", piece.Color[0])

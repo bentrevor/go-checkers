@@ -10,13 +10,14 @@ func IncludesMove(moves []Move, move Move) bool {
 	return false
 }
 
+func SameMove(move1 Move, move2 Move) bool {
+	return SameSpace(move1.StartingSpace, move2.StartingSpace) &&
+		SameSpace(move1.TargetSpace, move2.TargetSpace)
+}
+
 func SameSpace(pieceSpace Space, targetSpace Space) bool {
 	return pieceSpace.Rank == targetSpace.Rank &&
 		pieceSpace.File == targetSpace.File
-}
-
-func SameMove(move1 Move, move2 Move) bool {
-	return SameSpace(move1.StartingSpace, move2.StartingSpace) && SameSpace(move1.TargetSpace, move2.TargetSpace)
 }
 
 func SpaceForIndex(index int) Space {
@@ -38,11 +39,16 @@ func SpaceColorForIndex(index int) Color {
 }
 
 func leftTargetSpace(board Board, space Space) Space {
-	color := board.GetPieceAtSpace(space).Color
+	piece, foundPiece := board.GetPieceAtSpace(space)
+
+	if !foundPiece {
+		// TODO
+	}
+
 	nextRank := 0
 	nextFile := decFile(space.File)
 
-	if color == Black {
+	if piece.Color == Black {
 		nextRank = space.Rank - 1
 	} else {
 		nextRank = space.Rank + 1
@@ -82,9 +88,7 @@ func GetCaptureSpaceInDirection(space Space, color Color, direction string) (Spa
 	return Space{}, false
 }
 
-// private
-
-func getNextSpace(startingSpace Space, targetSpace Space) Space {
+func getNextSpaceInSameDirection(startingSpace Space, targetSpace Space) Space {
 	increasingRank := startingSpace.Rank < targetSpace.Rank
 	increasingFile := startingSpace.File[0] < targetSpace.File[0]
 	nextRank := 0
@@ -105,12 +109,12 @@ func getNextSpace(startingSpace Space, targetSpace Space) Space {
 	return Space{File: nextFile, Rank: nextRank}
 }
 
-func notOnLeftEdge(space Space) bool {
-	return space.File != "a"
+func onLeftEdge(space Space) bool {
+	return space.File == "a"
 }
 
-func notOnRightEdge(space Space) bool {
-	return space.File != "h"
+func onRightEdge(space Space) bool {
+	return space.File == "h"
 }
 
 func incFile(file string) string {

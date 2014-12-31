@@ -55,10 +55,17 @@ func TestGame_TogglesPlayers(t *testing.T) {
 func TestGame_MakesMovesOnTheBoard(t *testing.T) {
 	game.CurrentPlayer = NewMockPlayer()
 
-	assertEquals(t, White, game.Board.GetPieceAtSpace(D4).Color)
-	assertEquals(t, NoColor, game.Board.GetPieceAtSpace(C3).Color)
+	d4Piece, _ := game.Board.GetPieceAtSpace(D4)
+	c3Piece, _ := game.Board.GetPieceAtSpace(C3)
+
+	assertEquals(t, White, d4Piece.Color)
+	assertEquals(t, NoColor, c3Piece.Color)
 }
 
 func TestGame_ValidatesMoves(t *testing.T) {
-	assert(t, game.InvalidInput(Move{B4, C5}), "invalid move - no piece at starting space")
+	assert(t, !game.ValidInput(Move{B4, C5}), "invalid move - no piece at starting space")
+}
+
+func TestGame_ValidatesInputFormat(t *testing.T) {
+	assert(t, !game.ValidInput(Move{B4, C5}), "invalid move - no piece at starting space")
 }

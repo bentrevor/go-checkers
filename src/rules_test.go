@@ -8,8 +8,8 @@ import (
 
 func TestRules_KnowsWhereAPieceCanMove(t *testing.T) {
 	board := NewGameBoard()
-	whitePiece := board.GetPieceAtSpace(G3)
-	blackPiece := board.GetPieceAtSpace(H6)
+	whitePiece, _ := board.GetPieceAtSpace(G3)
+	blackPiece, _ := board.GetPieceAtSpace(H6)
 
 	whiteMoves := []Move{
 		Move{StartingSpace: G3, TargetSpace: F4},
@@ -25,8 +25,8 @@ func TestRules_KnowsWhereAPieceCanMove(t *testing.T) {
 }
 
 func TestRules_KnowsWhereAPieceCanJump(t *testing.T) {
-	d6Piece := board.GetPieceAtSpace(D6)
-	f6Piece := board.GetPieceAtSpace(F6)
+	d6Piece, _ := board.GetPieceAtSpace(D6)
+	f6Piece, _ := board.GetPieceAtSpace(F6)
 
 	board.PlacePiece(Piece{Color: White, Space: E5})
 
@@ -65,4 +65,9 @@ func TestRules_KnowsWhenAMoveIsInvalid(t *testing.T) {
 
 	move = Move{StartingSpace: F4, TargetSpace: E3}
 	assert(t, !IsLegalMove(move, board, Black), "invalid black move - moving into an occupied square")
+}
+
+func TestRules_ConvertsStringToMove(t *testing.T) {
+	move := Move{StartingSpace: A3, TargetSpace: B4}
+	assert(t, !IsLegalMove(move, board, Black), "invalid black move - wrong color")
 }

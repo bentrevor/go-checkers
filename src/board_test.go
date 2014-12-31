@@ -17,11 +17,13 @@ func TestBoard_SetsTheInitialPieceLayout(t *testing.T) {
 	blackSpaces := []Space{B6, D6, F6, H6, A7, C7, E7, G7, B8, D8, F8, H8}
 
 	for _, space := range whiteSpaces {
-		assertEquals(t, White, board.GetPieceAtSpace(space).Color)
+		piece, _ := board.GetPieceAtSpace(space)
+		assertEquals(t, White, piece.Color)
 	}
 
 	for _, space := range blackSpaces {
-		assertEquals(t, Black, board.GetPieceAtSpace(space).Color)
+		piece, _ := board.GetPieceAtSpace(space)
+		assertEquals(t, Black, piece.Color)
 	}
 }
 
@@ -32,8 +34,8 @@ func TestBoard_CanPlaceAPiece(t *testing.T) {
 	piece1 := Piece{Color: White, Space: emptySpace}
 	piece2 := Piece{Color: White, Space: occupiedSpace}
 
-	_, createdPieceAtE5 := board.PlacePiece(piece1)
-	_, createdPieceAtE7 := board.PlacePiece(piece2)
+	createdPieceAtE5 := board.PlacePiece(piece1)
+	createdPieceAtE7 := board.PlacePiece(piece2)
 
 	assert(t, createdPieceAtE5, "should have placed piece at e5")
 	assert(t, !createdPieceAtE7, "should not have placed piece at e5")
@@ -41,8 +43,9 @@ func TestBoard_CanPlaceAPiece(t *testing.T) {
 
 func TestBoard_CanRemovePieces(t *testing.T) {
 	board.RemovePieceAtSpace(G3)
+	g3Piece, _ := board.GetPieceAtSpace(G3)
 
-	assertEquals(t, NoColor, board.GetPieceAtSpace(G3).Color)
+	assertEquals(t, NoColor, g3Piece.Color)
 }
 
 func TestBoard_CanMakeMoves(t *testing.T) {
@@ -53,6 +56,9 @@ func TestBoard_CanMakeMoves(t *testing.T) {
 
 	board.MakeMove(move)
 
-	assertEquals(t, White, board.GetPieceAtSpace(H4).Color)
-	assertEquals(t, NoColor, board.GetPieceAtSpace(G3).Color)
+	h4Piece, _ := board.GetPieceAtSpace(H4)
+	g3Piece, _ := board.GetPieceAtSpace(G3)
+
+	assertEquals(t, White, h4Piece.Color)
+	assertEquals(t, NoColor, g3Piece.Color)
 }

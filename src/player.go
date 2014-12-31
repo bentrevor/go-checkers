@@ -26,10 +26,6 @@ func NewHumanPlayer(color Color) Player {
 	return &HumanPlayer{color: color, MoveDecider: ConsoleInput{}}
 }
 
-func MoveFromString(input string) Move {
-	return Move{StartingSpace: NewSpace(input[0:2]), TargetSpace: NewSpace(input[5:7])}
-}
-
 func (hp *HumanPlayer) GetMove(board Board) Move {
 	return hp.MoveDecider.GetMove(board)
 }
