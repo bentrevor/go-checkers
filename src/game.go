@@ -1,5 +1,7 @@
 package checkers
 
+import "fmt"
+
 type Game struct {
 	Board         Board
 	CurrentPlayer Player
@@ -21,8 +23,13 @@ type Output interface {
 }
 
 func NewGame(player1 Player, player2 Player, output Output) Game {
+	board := Board{}
+
+	board.PlacePiece(Piece{Color: White, Space: C3})
+	board.PlacePiece(Piece{Color: Black, Space: E5})
+
 	return Game{
-		Board:         NewGameBoard(),
+		Board:         board,
 		CurrentPlayer: player1,
 		OtherPlayer:   player2,
 		Output:        output,
@@ -52,6 +59,9 @@ func (game *Game) Start() {
 	for !IsGameOver(game.Board) {
 		game.NextTurn()
 	}
+
+	game.Output.PrintBoard(game.Board)
+	fmt.Println("game over!")
 }
 
 func (game *Game) CurrentColor() Color {

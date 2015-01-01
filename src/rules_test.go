@@ -82,3 +82,18 @@ func TestRules_ValidatesInputFormat(t *testing.T) {
 	_, nonsenseInputErrorMessage := MoveFromString("xx - yy")
 	assert(t, (len(nonsenseInputErrorMessage) > 0), "invalid move from string - garbage input")
 }
+
+func TestRules_KnowsGameOver(t *testing.T) {
+	board := Board{}
+	whitePiece := Piece{Color: White, Space: G3}
+	blackPiece := Piece{Color: Black, Space: F4}
+
+	board.PlacePiece(whitePiece)
+	board.PlacePiece(blackPiece)
+
+	assert(t, !IsGameOver(board), "game over - game not over yet")
+
+	board.RemovePieceAtSpace(G3)
+
+	assert(t, IsGameOver(board), "game over - game is over after no more white pieces")
+}

@@ -28,7 +28,22 @@ func MoveFromString(input string) (Move, string) {
 }
 
 func IsGameOver(board Board) bool {
-	return false
+	blackPieceCount := countPiecesByColor(Black, board.Pieces)
+	whitePieceCount := countPiecesByColor(White, board.Pieces)
+
+	return whitePieceCount == 0 || blackPieceCount == 0
+}
+
+func countPiecesByColor(color Color, pieces []Piece) int {
+	count := 0
+
+	for _, piece := range pieces {
+		if piece.Color == color {
+			count += 1
+		}
+	}
+
+	return count
 }
 
 func (board Board) MovesForSpace(startingSpace Space, color Color) []Move {
