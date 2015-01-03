@@ -24,6 +24,25 @@ func TestRules_KnowsWhereAPieceCanMove(t *testing.T) {
 	assertEquals(t, blackMoves, MovesForPiece(blackPiece, board))
 }
 
+func TestRules_KnowsWhereAKingCanMove(t *testing.T) {
+	board := NewEmptyBoard()
+
+	whiteKing := Piece{Color: White, Space: E3, IsKing: true}
+	board.PlacePiece(whiteKing)
+
+	neMove := Move{StartingSpace: E3, TargetSpace: F4}
+	nwMove := Move{StartingSpace: E3, TargetSpace: D4}
+	swMove := Move{StartingSpace: E3, TargetSpace: D2}
+	seMove := Move{StartingSpace: E3, TargetSpace: F2}
+
+	kingMoves := board.MovesForSpace(E3, White)
+
+	assert(t, IncludesMove(kingMoves, neMove), "king moves: e3 - f4")
+	assert(t, IncludesMove(kingMoves, nwMove), "king moves: e3 - d4")
+	assert(t, IncludesMove(kingMoves, swMove), "king moves: e3 - d2")
+	assert(t, IncludesMove(kingMoves, seMove), "king moves: e3 - f2")
+}
+
 func TestRules_KnowsWhereAPieceCanJump(t *testing.T) {
 	d6Piece, _ := board.GetPieceAtSpace(D6)
 	f6Piece, _ := board.GetPieceAtSpace(F6)

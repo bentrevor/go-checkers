@@ -47,15 +47,36 @@ func countPiecesByColor(color Color, pieces []Piece) int {
 }
 
 func (board Board) MovesForSpace(startingSpace Space, color Color) []Move {
-	moves := []Move{}
-
-	nextRank := 0
+	var nextRank int
+	var moves []Move
 
 	if color == White {
 		nextRank = startingSpace.Rank + 1
 	} else {
 		nextRank = startingSpace.Rank - 1
 	}
+
+	moves = movesFor(board, startingSpace, nextRank)
+
+	piece, _ := board.GetPieceAtSpace(startingSpace)
+
+	if piece.IsKing {
+		var backwardsRank int
+
+		if color == White {
+			backwardsRank = startingSpace.Rank - 1
+		} else {
+			backwardsRank = startingSpace.Rank + 1
+		}
+
+		moves = append(moves, movesFor(board, startingSpace, backwardsRank)...)
+	}
+
+	return moves
+}
+
+func movesFor(board Board, startingSpace Space, nextRank int) []Move {
+	moves := []Move{}
 
 	if leftMove, ok := tryLeftMove(board, startingSpace, nextRank); ok {
 		moves = append(moves, leftMove)

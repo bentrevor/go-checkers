@@ -6,8 +6,9 @@ import (
 )
 
 type Piece struct {
-	Color Color
-	Space Space
+	Color  Color
+	Space  Space
+	IsKing bool
 }
 
 type Board struct {
