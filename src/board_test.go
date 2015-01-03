@@ -84,3 +84,28 @@ func TestBoard_CanBeCreatedFromFen(t *testing.T) {
 	assert(t, foundPieceAtA1, "fen had a piece at a1")
 	assertEquals(t, White, a1Piece.Color)
 }
+
+func TestBoard_CanBeCreatedFromFen2(t *testing.T) {
+	fen := "bwbw/4/4/wwbb/4/4/4/4 b"
+	board := BoardFromFen(fen)
+
+	a1Piece, foundPieceAtA1 := board.GetPieceAtSpace(A1)
+	h4Piece, foundPieceAtH4 := board.GetPieceAtSpace(H4)
+
+	assert(t, foundPieceAtH4, "fen had piece at h4")
+	assertEquals(t, Black, h4Piece.Color)
+	assert(t, foundPieceAtA1, "fen had a piece at a1")
+	assertEquals(t, Black, a1Piece.Color)
+}
+
+func TestBoard_CanExpandAFenRow(t *testing.T) {
+	fenRow := "4"
+	expandedRow := ExpandNumbers(fenRow)
+	assertEquals(t, len(expandedRow), 4)
+	assertEquals(t, expandedRow, "1111")
+
+	fenRow = "3w"
+	expandedRow = ExpandNumbers(fenRow)
+	assertEquals(t, len(expandedRow), 4)
+	assertEquals(t, expandedRow, "111w")
+}

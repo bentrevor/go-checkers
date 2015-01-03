@@ -1,6 +1,9 @@
 package checkers
 
-import "strings"
+import (
+	"regexp"
+	"strings"
+)
 
 type Piece struct {
 	Color Color
@@ -22,6 +25,7 @@ func NewGameBoard() Board {
 }
 
 func BoardFromFen(fen string) Board {
+
 	pieces := strings.Split(fen, " ")[0]
 	board := NewEmptyBoard()
 
@@ -29,28 +33,43 @@ func BoardFromFen(fen string) Board {
 		rank := i + 1
 		spaces := spacesForRank(rank)
 
-		if fenRow == "4" {
-			// no pieces
-		} else {
-			pieceIndex := strings.Index(fenRow, "w")
-			color := White
+		rowPieces := getRowPieces(fenRow)
 
-			if pieceIndex == -1 {
-				pieceIndex = strings.Index(fenRow, "b")
-				color = Black
-
-				if pieceIndex == -1 {
-					// TODO
-				}
-			}
-
+		for pieceIndex, fenPiece := range rowPieces {
+			var piece Piece
 			space := spaces[pieceIndex]
 
-			piece := Piece{Space: space, Color: color}
+			if fenPiece == "w" {
+				piece = Piece{Color: White, Space: space}
+			} else if fenPiece == "b" {
+				piece = Piece{Color: Black, Space: space}
+			}
+
 			board.PlacePiece(piece)
 		}
 	}
 	return board
+}
+
+func getRowPieces(fenRow string) []string {
+	return strings.Split(ExpandNumbers(fenRow), "")
+}
+
+func ExpandNumbers(row string) string {
+	matched, err := regexp.MatchString("[1234]", row)
+
+	if err != nil {
+		// TODO
+	}
+
+	if matched {
+		no4s := strings.Replace(row, "4", "1111", 1)
+		no3s := strings.Replace(no4s, "3", "111", 1)
+		no2s := strings.Replace(no3s, "2", "11", 1)
+		return no2s
+	} else {
+		return row
+	}
 }
 
 func (board *Board) GetPieceAtSpace(space Space) (Piece, bool) {
