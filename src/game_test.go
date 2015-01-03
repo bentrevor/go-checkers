@@ -66,3 +66,19 @@ func TestGame_MakesMovesOnTheBoard(t *testing.T) {
 func TestGame_ValidatesMoves(t *testing.T) {
 	assert(t, !game.IsValidMove(Move{B4, C5}), "invalid move - no piece at starting space")
 }
+
+func TestGame_InitFromFen(t *testing.T) {
+	game = NewGame(player1, player2, MockOutput{})
+	game.InitFromFen("4/4/4/4/bw2/4/4/4 b")
+
+	numPieces := 0
+
+	for _, piece := range game.Board.Pieces {
+		if piece.Color != NoColor {
+			numPieces += 1
+		}
+	}
+
+	assertEquals(t, Black, game.CurrentColor())
+	assertEquals(t, 2, numPieces)
+}

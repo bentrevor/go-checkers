@@ -1,17 +1,15 @@
 package checkers
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type Game struct {
 	Board         Board
 	CurrentPlayer Player
 	OtherPlayer   Player
 	Output        Output
-}
-
-type IO interface {
-	PrintBoard(Board)
-	GetInput() (string, error)
 }
 
 type Input interface {
@@ -31,6 +29,25 @@ func NewGame(player1 Player, player2 Player, output Output) Game {
 		OtherPlayer:   player2,
 		Output:        output,
 	}
+}
+
+func (game *Game) InitFromFen(fen string) {
+	board := BoardFromFen(fen)
+	fenColor := strings.Split(fen, " ")[1]
+
+	var color Color
+
+	if fenColor == "b" {
+		color = Black
+	} else {
+		color = White
+	}
+
+	if color != game.CurrentColor() {
+		game.togglePlayers()
+	}
+
+	game.Board = board
 }
 
 func (game *Game) NextTurn() {
