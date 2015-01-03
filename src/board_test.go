@@ -74,12 +74,23 @@ func TestBoard_CanMakeMoves(t *testing.T) {
 	g5Piece, _ := board.GetPieceAtSpace(G5)
 
 	assertEquals(t, NoColor, g5Piece.Color)
+}
+
+func TestBoard_CanPromotePieces(t *testing.T) {
+	board := Board{}
+	whitePiece := Piece{Color: White, Space: C7}
+	board.PlacePiece(whitePiece)
 
 	promotionMove, _ := MoveFromString("c7 - d8")
 	board.MakeMove(promotionMove)
 	king, _ := board.GetPieceAtSpace(D8)
 
 	assert(t, king.IsKing, "MakeMove promotion")
+
+	backwardsMove, _ := MoveFromString("d8 - e7")
+	board.MakeMove(backwardsMove)
+	king, _ = board.GetPieceAtSpace(E7)
+	assert(t, king.IsKing, "king stays a king")
 }
 
 func TestBoard_CanBeCreatedFromFen(t *testing.T) {

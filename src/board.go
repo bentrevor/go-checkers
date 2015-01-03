@@ -83,14 +83,15 @@ func (board *Board) GetPieceAtSpace(space Space) (Piece, bool) {
 }
 
 func (board *Board) MakeMove(move Move) {
-	piece, foundPiece := board.GetPieceAtSpace(move.StartingSpace)
+	movingPiece, foundPiece := board.GetPieceAtSpace(move.StartingSpace)
 
 	if !foundPiece {
 		// TODO
 	} else {
 		rank := move.TargetSpace.Rank
-		isKing := rank == 1 || rank == 8
-		newPiece := Piece{Color: piece.Color, Space: move.TargetSpace, IsKing: isKing}
+		isKing := (rank == 1 || rank == 8) || movingPiece.IsKing
+
+		newPiece := Piece{Color: movingPiece.Color, Space: move.TargetSpace, IsKing: isKing}
 		board.PlacePiece(newPiece)
 		board.RemovePieceAtSpace(move.StartingSpace)
 
