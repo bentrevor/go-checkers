@@ -23,10 +23,7 @@ type Output interface {
 }
 
 func NewGame(player1 Player, player2 Player, output Output) Game {
-	board := Board{}
-
-	board.PlacePiece(Piece{Color: White, Space: C3})
-	board.PlacePiece(Piece{Color: Black, Space: E5})
+	board := NewGameBoard()
 
 	return Game{
 		Board:         board,

@@ -1,5 +1,7 @@
 package checkers
 
+import "strings"
+
 type Piece struct {
 	Color Color
 	Space Space
@@ -16,6 +18,38 @@ func NewEmptyBoard() Board {
 func NewGameBoard() Board {
 	board := NewEmptyBoard()
 	board.placeInitialPieces()
+	return board
+}
+
+func BoardFromFen(fen string) Board {
+	pieces := strings.Split(fen, " ")[0]
+	board := NewEmptyBoard()
+
+	for i, fenRow := range strings.Split(pieces, "/") {
+		rank := i + 1
+		spaces := spacesForRank(rank)
+
+		if fenRow == "4" {
+			// no pieces
+		} else {
+			pieceIndex := strings.Index(fenRow, "w")
+			color := White
+
+			if pieceIndex == -1 {
+				pieceIndex = strings.Index(fenRow, "b")
+				color = Black
+
+				if pieceIndex == -1 {
+					// TODO
+				}
+			}
+
+			space := spaces[pieceIndex]
+
+			piece := Piece{Space: space, Color: color}
+			board.PlacePiece(piece)
+		}
+	}
 	return board
 }
 

@@ -181,3 +181,18 @@ func fileBetween(file1 string, file2 string) string {
 
 	return string(captureFile)
 }
+
+func spacesForRank(rank int) []Space {
+	spaces := [][]Space{
+		[]Space{A1, C1, E1, G1},
+		[]Space{B2, D2, F2, H2},
+		[]Space{A3, C3, E3, G3},
+		[]Space{B4, D4, F4, H4},
+		[]Space{A5, C5, E5, G5},
+		[]Space{B6, D6, F6, H6},
+		[]Space{A7, C7, E7, G7},
+		[]Space{B8, D8, F8, H8},
+	}
+
+	return spaces[rank-1]
+}

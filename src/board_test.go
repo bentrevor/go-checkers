@@ -72,3 +72,15 @@ func TestBoard_CanMakeMoves(t *testing.T) {
 
 	assertEquals(t, NoColor, g5Piece.Color)
 }
+
+func TestBoard_CanBeCreatedFromFen(t *testing.T) {
+	fen := "w3/4/4/4/4/4/4/4 w"
+	board := BoardFromFen(fen)
+
+	a1Piece, foundPieceAtA1 := board.GetPieceAtSpace(A1)
+	_, foundPieceAtG3 := board.GetPieceAtSpace(G3)
+
+	assert(t, !foundPieceAtG3, "fen had no piece at g3")
+	assert(t, foundPieceAtA1, "fen had a piece at a1")
+	assertEquals(t, White, a1Piece.Color)
+}
