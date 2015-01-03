@@ -45,28 +45,27 @@ func TestRules_KnowsWhereAKingCanMove(t *testing.T) {
 
 func TestRules_CanGetAMoveInASingleDirection(t *testing.T) {
 	board := Board{}
-	whitePiece := Piece{Color: White, Space: G3, IsKing: true}
+	whiteKing := Piece{Color: White, Space: G3, IsKing: true}
 	blackPiece := Piece{Color: Black, Space: F4}
+	blackPiece2 := Piece{Color: Black, Space: H2}
 
-	board.PlacePiece(whitePiece)
+	board.PlacePiece(whiteKing)
 	board.PlacePiece(blackPiece)
+	board.PlacePiece(blackPiece2)
 
-	var moves []Move
-
-	nwMove, _ := board.TryMove(moves, G3, Northwest)
-	neMove, _ := board.TryMove(moves, G3, Northeast)
-	swMove, _ := board.TryMove(moves, G3, Southwest)
-	seMove, _ := board.TryMove(moves, G3, Southeast)
+	nwMove, _ := board.TryMove(G3, Northwest)
+	neMove, _ := board.TryMove(G3, Northeast)
+	swMove, _ := board.TryMove(G3, Southwest)
+	_, madeSoutheastMove := board.TryMove(G3, Southeast)
 
 	actualNwMove, _ := MoveFromString("g3 - e5")
 	actualNeMove, _ := MoveFromString("g3 - h4")
 	actualSwMove, _ := MoveFromString("g3 - f2")
-	actualSeMove, _ := MoveFromString("g3 - h2")
 
 	assert(t, IsSameMove(nwMove, actualNwMove), "TryMove - capture move (nw)")
 	assert(t, IsSameMove(neMove, actualNeMove), "TryMove - non-capture move (ne)")
 	assert(t, IsSameMove(swMove, actualSwMove), "TryMove - non-capture move (sw)")
-	assert(t, IsSameMove(seMove, actualSeMove), "TryMove - non-capture move (se)")
+	assert(t, !madeSoutheastMove, "TryMove - invalid move (se)")
 }
 
 func TestRules_KnowsWhereAPieceCanJump(t *testing.T) {
@@ -136,9 +135,9 @@ func TestRules_KnowsGameOver(t *testing.T) {
 	board.PlacePiece(whitePiece)
 	board.PlacePiece(blackPiece)
 
-	assert(t, !IsGameOver(board), "game over - game not over yet")
+	assert(t, !board.IsGameOver(), "game over - game not over yet")
 
 	board.RemovePieceAtSpace(G3)
 
-	assert(t, IsGameOver(board), "game over - game is over after no more white pieces")
+	assert(t, board.IsGameOver(), "game over - game is over after no more white pieces")
 }

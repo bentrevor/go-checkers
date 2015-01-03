@@ -26,7 +26,6 @@ func NewGameBoard() Board {
 }
 
 func BoardFromFen(fen string) Board {
-
 	pieces := strings.Split(fen, " ")[0]
 	board := NewEmptyBoard()
 

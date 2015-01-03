@@ -18,103 +18,30 @@ var (
 )
 
 func (board Board) MovesForPiece(piece Piece) []Move {
-	space := piece.Space
-
-	moves := board.MovesForSpace(space)
-	return moves
+	return board.MovesForSpace(piece.Space)
 }
 
-func MoveFromString(input string) (Move, string) {
-	if len(input) != 7 {
-		return Move{}, "wrong length: enter a move like 'c3 - d4'"
-	} else {
-		startingSpace := NewSpace(input[0:2])
-		targetSpace := NewSpace(input[5:7])
-
-		if onBoard(startingSpace) && onBoard(targetSpace) {
-			return Move{StartingSpace: startingSpace, TargetSpace: targetSpace}, ""
-		} else {
-			return Move{}, "enter real moves, dummy"
-		}
-	}
-}
-
-func IsGameOver(board Board) bool {
-	blackPieceCount := countPiecesByColor(Black, board.Pieces)
-	whitePieceCount := countPiecesByColor(White, board.Pieces)
+func (board Board) IsGameOver() bool {
+	blackPieceCount := board.countPiecesByColor(Black)
+	whitePieceCount := board.countPiecesByColor(White)
 
 	return whitePieceCount == 0 || blackPieceCount == 0
 }
 
-func countPiecesByColor(color Color, pieces []Piece) int {
-	count := 0
-
-	for _, piece := range pieces {
-		if piece.Color == color {
-			count += 1
-		}
-	}
-
-	return count
-}
-
 func (board Board) MovesForSpace(startingSpace Space) []Move {
 	var moves []Move
+	directions := []Direction{Northwest, Northeast, Southeast, Southwest}
 
-	nwMove, nwMoveCreated := board.TryMove(moves, startingSpace, Northwest)
-	neMove, neMoveCreated := board.TryMove(moves, startingSpace, Northeast)
-	swMove, swMoveCreated := board.TryMove(moves, startingSpace, Southwest)
-	seMove, seMoveCreated := board.TryMove(moves, startingSpace, Southeast)
-
-	if nwMoveCreated {
-		moves = append(moves, nwMove)
-	}
-
-	if neMoveCreated {
-		moves = append(moves, neMove)
-	}
-
-	if swMoveCreated {
-		moves = append(moves, swMove)
-	}
-
-	if seMoveCreated {
-		moves = append(moves, seMove)
+	for _, direction := range directions {
+		if move, moveCreated := board.TryMove(startingSpace, direction); moveCreated {
+			moves = append(moves, move)
+		}
 	}
 
 	return moves
 }
 
-func isWrongDirection(color Color, direction Direction) bool {
-	var correctColor Color
-
-	if direction.increasingRank {
-		correctColor = White
-	} else {
-		correctColor = Black
-	}
-
-	return color != correctColor
-}
-
-func (board Board) moveInDirection(direction Direction, space Space) (Move, bool) {
-	nonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, direction)
-	captureSpace, _ := GetCaptureSpaceInDirection(space, direction)
-
-	movingPiece, _ := board.GetPieceAtSpace(space)
-	nonCapturePiece, foundNonCapturePiece := board.GetPieceAtSpace(nonCaptureSpace)
-	_, foundCapturePiece := board.GetPieceAtSpace(captureSpace)
-
-	if onBoard(nonCaptureSpace) && !foundNonCapturePiece {
-		return Move{StartingSpace: space, TargetSpace: nonCaptureSpace}, true
-	} else if nonCapturePiece.Color != movingPiece.Color && onBoard(captureSpace) && !foundCapturePiece {
-		return Move{StartingSpace: space, TargetSpace: captureSpace}, true
-	} else {
-		return Move{}, false
-	}
-}
-
-func (board Board) TryMove(moves []Move, space Space, direction Direction) (Move, bool) {
+func (board Board) TryMove(space Space, direction Direction) (Move, bool) {
 	piece, _ := board.GetPieceAtSpace(space)
 
 	if piece.IsKing {
@@ -126,6 +53,55 @@ func (board Board) TryMove(moves []Move, space Space, direction Direction) (Move
 			return board.moveInDirection(direction, space)
 		}
 	}
+}
+
+func (board Board) moveInDirection(direction Direction, space Space) (Move, bool) {
+	nearSpace, _ := GetNearSpaceInDirection(space, direction)
+	farSpace, _ := GetFarSpaceInDirection(space, direction)
+
+	if board.canMoveToNearSpace(direction, space) {
+		return Move{StartingSpace: space, TargetSpace: nearSpace}, true
+	} else if board.canCaptureToFarSpace(direction, space) {
+		return Move{StartingSpace: space, TargetSpace: farSpace}, true
+	} else {
+		return Move{}, false
+	}
+}
+
+func (board Board) canMoveToNearSpace(direction Direction, space Space) bool {
+	nearSpace, _ := GetNearSpaceInDirection(space, direction)
+	_, foundNearPiece := board.GetPieceAtSpace(nearSpace)
+
+	return onBoard(nearSpace) && !foundNearPiece
+}
+
+func (board Board) canCaptureToFarSpace(direction Direction, space Space) bool {
+	farSpace, _ := GetFarSpaceInDirection(space, direction)
+
+	return onBoard(farSpace) &&
+		board.oppositeColorOnNearSpace(direction, space) &&
+		board.isEmpty(farSpace)
+}
+
+func (board Board) isEmpty(space Space) bool {
+	_, foundPiece := board.GetPieceAtSpace(space)
+
+	return !foundPiece
+}
+
+func (board Board) oppositeColorOnNearSpace(direction Direction, space Space) bool {
+	nearSpace, _ := GetNearSpaceInDirection(space, direction)
+	farSpace, _ := GetFarSpaceInDirection(space, direction)
+
+	nearPiece, _ := board.GetPieceAtSpace(nearSpace)
+	movingPiece, _ := board.GetPieceAtSpace(space)
+	_, foundFarPiece := board.GetPieceAtSpace(farSpace)
+
+	if nearPiece.Color != movingPiece.Color {
+		return onBoard(farSpace) && !foundFarPiece
+	}
+
+	return false
 }
 
 func movesFor(board Board, startingSpace Space, nextRank int) []Move {
@@ -202,4 +178,28 @@ func getNextMove(startingSpace Space, targetSpace Space, board Board) (Move, boo
 			return Move{}, false
 		}
 	}
+}
+
+func (board Board) countPiecesByColor(color Color) int {
+	count := 0
+
+	for _, piece := range board.Pieces {
+		if piece.Color == color {
+			count += 1
+		}
+	}
+
+	return count
+}
+
+func isWrongDirection(color Color, direction Direction) bool {
+	var correctColor Color
+
+	if direction.increasingRank {
+		correctColor = White
+	} else {
+		correctColor = Black
+	}
+
+	return color != correctColor
 }

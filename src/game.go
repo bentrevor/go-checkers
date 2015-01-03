@@ -70,7 +70,7 @@ func (game *Game) IsValidMove(move Move) bool {
 }
 
 func (game *Game) Start() {
-	for !IsGameOver(game.Board) {
+	for !game.Board.IsGameOver() {
 		game.NextTurn()
 	}
 

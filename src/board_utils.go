@@ -40,26 +40,7 @@ func SpaceColorForIndex(index int) Color {
 	}
 }
 
-func leftTargetSpace(board Board, space Space) Space {
-	piece, foundPiece := board.GetPieceAtSpace(space)
-
-	if !foundPiece {
-		// TODO
-	}
-
-	nextRank := 0
-	nextFile := decFile(space.File)
-
-	if piece.Color == Black {
-		nextRank = space.Rank - 1
-	} else {
-		nextRank = space.Rank + 1
-	}
-
-	return Space{File: nextFile, Rank: nextRank}
-}
-
-func GetNonCaptureSpaceInDirection(space Space, direction Direction) (Space, bool) {
+func GetNearSpaceInDirection(space Space, direction Direction) (Space, bool) {
 	nextRank := 0
 	nextFile := ""
 
@@ -75,20 +56,35 @@ func GetNonCaptureSpaceInDirection(space Space, direction Direction) (Space, boo
 		nextFile = decFile(space.File)
 	}
 
-	nonCaptureSpace := Space{File: nextFile, Rank: nextRank}
-	if onBoard(nonCaptureSpace) {
-		return nonCaptureSpace, true
+	nearSpace := Space{File: nextFile, Rank: nextRank}
+	if onBoard(nearSpace) {
+		return nearSpace, true
 	} else {
 		return Space{}, false
 	}
 }
 
-func GetCaptureSpaceInDirection(space Space, direction Direction) (Space, bool) {
-	if nonCaptureSpace, ok := GetNonCaptureSpaceInDirection(space, direction); ok {
-		return GetNonCaptureSpaceInDirection(nonCaptureSpace, direction)
+func GetFarSpaceInDirection(space Space, direction Direction) (Space, bool) {
+	if nearSpace, ok := GetNearSpaceInDirection(space, direction); ok {
+		return GetNearSpaceInDirection(nearSpace, direction)
 	}
 
 	return Space{}, false
+}
+
+func MoveFromString(input string) (Move, string) {
+	if len(input) != 7 {
+		return Move{}, "wrong length: enter a move like 'c3 - d4'"
+	} else {
+		startingSpace := NewSpace(input[0:2])
+		targetSpace := NewSpace(input[5:7])
+
+		if onBoard(startingSpace) && onBoard(targetSpace) {
+			return Move{StartingSpace: startingSpace, TargetSpace: targetSpace}, ""
+		} else {
+			return Move{}, "enter real moves, dummy"
+		}
+	}
 }
 
 func getNextSpaceInSameDirection(startingSpace Space, targetSpace Space) Space {

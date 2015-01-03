@@ -32,17 +32,17 @@ func TestBoardUtils_KnowsTheSpaceForAnIndex(t *testing.T) {
 func TestBoardUtils_GetsSpacesInADirection(t *testing.T) {
 	space := D4
 
-	leftNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, Northwest)
-	leftCaptureSpace, _ := GetCaptureSpaceInDirection(space, Northwest)
+	leftNearSpace, _ := GetNearSpaceInDirection(space, Northwest)
+	leftFarSpace, _ := GetFarSpaceInDirection(space, Northwest)
 
-	rightNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, Northeast)
-	rightCaptureSpace, _ := GetCaptureSpaceInDirection(space, Northeast)
+	rightNearSpace, _ := GetNearSpaceInDirection(space, Northeast)
+	rightFarSpace, _ := GetFarSpaceInDirection(space, Northeast)
 
-	assert(t, IsSameSpace(C5, leftNonCaptureSpace), "white left non capture space")
-	assert(t, IsSameSpace(B6, leftCaptureSpace), "white left capture space")
+	assert(t, IsSameSpace(C5, leftNearSpace), "white left non capture space")
+	assert(t, IsSameSpace(B6, leftFarSpace), "white left capture space")
 
-	assert(t, IsSameSpace(E5, rightNonCaptureSpace), "white right non capture space")
-	assert(t, IsSameSpace(F6, rightCaptureSpace), "white right capture space")
+	assert(t, IsSameSpace(E5, rightNearSpace), "white right non capture space")
+	assert(t, IsSameSpace(F6, rightFarSpace), "white right capture space")
 }
 
 func TestBoardUtils_GetsSpacesInADirectionAtTheEdgeOfTheBoard(t *testing.T) {
@@ -52,15 +52,15 @@ func TestBoardUtils_GetsSpacesInADirectionAtTheEdgeOfTheBoard(t *testing.T) {
 
 	board.PlacePiece(piece)
 
-	leftNonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, Southwest)
-	_, leftCaptureSpaceCreated := GetCaptureSpaceInDirection(space, Southwest)
+	leftNearSpace, _ := GetNearSpaceInDirection(space, Southwest)
+	_, leftFarSpaceCreated := GetFarSpaceInDirection(space, Southwest)
 
-	_, rightNonCaptureSpaceCreated := GetNonCaptureSpaceInDirection(space, Southeast)
-	_, rightCaptureSpaceCreated := GetCaptureSpaceInDirection(space, Southeast)
+	_, rightNearSpaceCreated := GetNearSpaceInDirection(space, Southeast)
+	_, rightFarSpaceCreated := GetFarSpaceInDirection(space, Southeast)
 
-	assert(t, IsSameSpace(G1, leftNonCaptureSpace), "left non capture space")
-	assert(t, !leftCaptureSpaceCreated, "left capture space shouldn't exist")
+	assert(t, IsSameSpace(G1, leftNearSpace), "left non capture space")
+	assert(t, !leftFarSpaceCreated, "left capture space shouldn't exist")
 
-	assert(t, !rightNonCaptureSpaceCreated, "right non capture space shouldn't exist")
-	assert(t, !rightCaptureSpaceCreated, "right capture space shouldn't exist")
+	assert(t, !rightNearSpaceCreated, "right non capture space shouldn't exist")
+	assert(t, !rightFarSpaceCreated, "right capture space shouldn't exist")
 }
