@@ -59,20 +59,20 @@ func leftTargetSpace(board Board, space Space) Space {
 	return Space{File: nextFile, Rank: nextRank}
 }
 
-func GetNonCaptureSpaceInDirection(space Space, color Color, direction string) (Space, bool) {
+func GetNonCaptureSpaceInDirection(space Space, direction Direction) (Space, bool) {
 	nextRank := 0
 	nextFile := ""
 
-	if color == Black {
-		nextRank = space.Rank - 1
-	} else {
+	if direction.increasingRank {
 		nextRank = space.Rank + 1
+	} else {
+		nextRank = space.Rank - 1
 	}
 
-	if direction == "left" {
-		nextFile = decFile(space.File)
-	} else {
+	if direction.increasingFile {
 		nextFile = incFile(space.File)
+	} else {
+		nextFile = decFile(space.File)
 	}
 
 	nonCaptureSpace := Space{File: nextFile, Rank: nextRank}
@@ -83,9 +83,9 @@ func GetNonCaptureSpaceInDirection(space Space, color Color, direction string) (
 	}
 }
 
-func GetCaptureSpaceInDirection(space Space, color Color, direction string) (Space, bool) {
-	if nonCaptureSpace, ok := GetNonCaptureSpaceInDirection(space, color, direction); ok {
-		return GetNonCaptureSpaceInDirection(nonCaptureSpace, color, direction)
+func GetCaptureSpaceInDirection(space Space, direction Direction) (Space, bool) {
+	if nonCaptureSpace, ok := GetNonCaptureSpaceInDirection(space, direction); ok {
+		return GetNonCaptureSpaceInDirection(nonCaptureSpace, direction)
 	}
 
 	return Space{}, false

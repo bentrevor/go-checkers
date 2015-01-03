@@ -20,8 +20,8 @@ func TestRules_KnowsWhereAPieceCanMove(t *testing.T) {
 		Move{StartingSpace: H6, TargetSpace: G5},
 	}
 
-	assertEquals(t, whiteMoves, MovesForPiece(whitePiece, board))
-	assertEquals(t, blackMoves, MovesForPiece(blackPiece, board))
+	assertEquals(t, whiteMoves, board.MovesForPiece(whitePiece))
+	assertEquals(t, blackMoves, board.MovesForPiece(blackPiece))
 }
 
 func TestRules_KnowsWhereAKingCanMove(t *testing.T) {
@@ -35,12 +35,38 @@ func TestRules_KnowsWhereAKingCanMove(t *testing.T) {
 	swMove := Move{StartingSpace: E3, TargetSpace: D2}
 	seMove := Move{StartingSpace: E3, TargetSpace: F2}
 
-	kingMoves := board.MovesForSpace(E3, White)
+	kingMoves := board.MovesForSpace(E3)
 
 	assert(t, IncludesMove(kingMoves, neMove), "king moves: e3 - f4")
 	assert(t, IncludesMove(kingMoves, nwMove), "king moves: e3 - d4")
 	assert(t, IncludesMove(kingMoves, swMove), "king moves: e3 - d2")
 	assert(t, IncludesMove(kingMoves, seMove), "king moves: e3 - f2")
+}
+
+func TestRules_CanGetAMoveInASingleDirection(t *testing.T) {
+	board := Board{}
+	whitePiece := Piece{Color: White, Space: G3, IsKing: true}
+	blackPiece := Piece{Color: Black, Space: F4}
+
+	board.PlacePiece(whitePiece)
+	board.PlacePiece(blackPiece)
+
+	var moves []Move
+
+	nwMove, _ := board.TryMove(moves, G3, Northwest)
+	neMove, _ := board.TryMove(moves, G3, Northeast)
+	swMove, _ := board.TryMove(moves, G3, Southwest)
+	seMove, _ := board.TryMove(moves, G3, Southeast)
+
+	actualNwMove, _ := MoveFromString("g3 - e5")
+	actualNeMove, _ := MoveFromString("g3 - h4")
+	actualSwMove, _ := MoveFromString("g3 - f2")
+	actualSeMove, _ := MoveFromString("g3 - h2")
+
+	assert(t, IsSameMove(nwMove, actualNwMove), "TryMove - capture move (nw)")
+	assert(t, IsSameMove(neMove, actualNeMove), "TryMove - non-capture move (ne)")
+	assert(t, IsSameMove(swMove, actualSwMove), "TryMove - non-capture move (sw)")
+	assert(t, IsSameMove(seMove, actualSeMove), "TryMove - non-capture move (se)")
 }
 
 func TestRules_KnowsWhereAPieceCanJump(t *testing.T) {
@@ -49,8 +75,8 @@ func TestRules_KnowsWhereAPieceCanJump(t *testing.T) {
 
 	board.PlacePiece(Piece{Color: White, Space: E5})
 
-	d6Moves := MovesForPiece(d6Piece, board)
-	f6Moves := MovesForPiece(f6Piece, board)
+	d6Moves := board.MovesForPiece(d6Piece)
+	f6Moves := board.MovesForPiece(f6Piece)
 
 	captureMoveForD6 := Move{StartingSpace: D6, TargetSpace: F4}
 	captureMoveForF6 := Move{StartingSpace: F6, TargetSpace: D4}

@@ -5,10 +5,22 @@ type Move struct {
 	TargetSpace   Space
 }
 
-func MovesForPiece(piece Piece, board Board) []Move {
+type Direction struct {
+	increasingFile bool
+	increasingRank bool
+}
+
+var (
+	Northwest Direction = Direction{increasingFile: false, increasingRank: true}
+	Northeast Direction = Direction{increasingFile: true, increasingRank: true}
+	Southwest Direction = Direction{increasingFile: false, increasingRank: false}
+	Southeast Direction = Direction{increasingFile: true, increasingRank: false}
+)
+
+func (board Board) MovesForPiece(piece Piece) []Move {
 	space := piece.Space
 
-	moves := board.MovesForSpace(space, piece.Color)
+	moves := board.MovesForSpace(space)
 	return moves
 }
 
@@ -46,33 +58,74 @@ func countPiecesByColor(color Color, pieces []Piece) int {
 	return count
 }
 
-func (board Board) MovesForSpace(startingSpace Space, color Color) []Move {
-	var nextRank int
+func (board Board) MovesForSpace(startingSpace Space) []Move {
 	var moves []Move
 
-	if color == White {
-		nextRank = startingSpace.Rank + 1
-	} else {
-		nextRank = startingSpace.Rank - 1
+	nwMove, nwMoveCreated := board.TryMove(moves, startingSpace, Northwest)
+	neMove, neMoveCreated := board.TryMove(moves, startingSpace, Northeast)
+	swMove, swMoveCreated := board.TryMove(moves, startingSpace, Southwest)
+	seMove, seMoveCreated := board.TryMove(moves, startingSpace, Southeast)
+
+	if nwMoveCreated {
+		moves = append(moves, nwMove)
 	}
 
-	moves = movesFor(board, startingSpace, nextRank)
+	if neMoveCreated {
+		moves = append(moves, neMove)
+	}
 
-	piece, _ := board.GetPieceAtSpace(startingSpace)
+	if swMoveCreated {
+		moves = append(moves, swMove)
+	}
 
-	if piece.IsKing {
-		var backwardsRank int
-
-		if color == White {
-			backwardsRank = startingSpace.Rank - 1
-		} else {
-			backwardsRank = startingSpace.Rank + 1
-		}
-
-		moves = append(moves, movesFor(board, startingSpace, backwardsRank)...)
+	if seMoveCreated {
+		moves = append(moves, seMove)
 	}
 
 	return moves
+}
+
+func isWrongDirection(color Color, direction Direction) bool {
+	var correctColor Color
+
+	if direction.increasingRank {
+		correctColor = White
+	} else {
+		correctColor = Black
+	}
+
+	return color != correctColor
+}
+
+func (board Board) moveInDirection(direction Direction, space Space) (Move, bool) {
+	nonCaptureSpace, _ := GetNonCaptureSpaceInDirection(space, direction)
+	captureSpace, _ := GetCaptureSpaceInDirection(space, direction)
+
+	movingPiece, _ := board.GetPieceAtSpace(space)
+	nonCapturePiece, foundNonCapturePiece := board.GetPieceAtSpace(nonCaptureSpace)
+	_, foundCapturePiece := board.GetPieceAtSpace(captureSpace)
+
+	if onBoard(nonCaptureSpace) && !foundNonCapturePiece {
+		return Move{StartingSpace: space, TargetSpace: nonCaptureSpace}, true
+	} else if nonCapturePiece.Color != movingPiece.Color && onBoard(captureSpace) && !foundCapturePiece {
+		return Move{StartingSpace: space, TargetSpace: captureSpace}, true
+	} else {
+		return Move{}, false
+	}
+}
+
+func (board Board) TryMove(moves []Move, space Space, direction Direction) (Move, bool) {
+	piece, _ := board.GetPieceAtSpace(space)
+
+	if piece.IsKing {
+		return board.moveInDirection(direction, space)
+	} else {
+		if isWrongDirection(piece.Color, direction) {
+			return Move{}, false
+		} else {
+			return board.moveInDirection(direction, space)
+		}
+	}
 }
 
 func movesFor(board Board, startingSpace Space, nextRank int) []Move {
@@ -83,6 +136,7 @@ func movesFor(board Board, startingSpace Space, nextRank int) []Move {
 	}
 
 	if rightMove, ok := tryRightMove(board, startingSpace, nextRank); ok {
+
 		moves = append(moves, rightMove)
 	}
 
@@ -90,12 +144,12 @@ func movesFor(board Board, startingSpace Space, nextRank int) []Move {
 }
 
 func IsLegalMove(move Move, board Board, color Color) bool {
-	_, foundPiece := board.GetPieceAtSpace(move.StartingSpace)
+	piece, foundPiece := board.GetPieceAtSpace(move.StartingSpace)
 
-	if !foundPiece {
+	if !foundPiece || piece.Color != color {
 		return false
 	} else {
-		moves := board.MovesForSpace(move.StartingSpace, color)
+		moves := board.MovesForPiece(piece)
 
 		if IncludesMove(moves, move) {
 			return true
