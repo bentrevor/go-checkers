@@ -51,8 +51,11 @@ func TestBoard_CanRemovePieces(t *testing.T) {
 func TestBoard_CanMakeMoves(t *testing.T) {
 	board := Board{}
 	whitePiece := Piece{Color: White, Space: G3}
+	whitePiece2 := Piece{Color: White, Space: C7}
 	board.PlacePiece(whitePiece)
-	move := Move{StartingSpace: G3, TargetSpace: H4}
+	board.PlacePiece(whitePiece2)
+
+	move, _ := MoveFromString("g3 - h4")
 
 	board.MakeMove(move)
 
@@ -65,12 +68,18 @@ func TestBoard_CanMakeMoves(t *testing.T) {
 	blackPiece := Piece{Color: Black, Space: G5}
 	board.PlacePiece(blackPiece)
 
-	captureMove := Move{StartingSpace: H4, TargetSpace: F6}
+	captureMove, _ := MoveFromString("h4 - f6")
 	board.MakeMove(captureMove)
 
 	g5Piece, _ := board.GetPieceAtSpace(G5)
 
 	assertEquals(t, NoColor, g5Piece.Color)
+
+	promotionMove, _ := MoveFromString("c7 - d8")
+	board.MakeMove(promotionMove)
+	king, _ := board.GetPieceAtSpace(D8)
+
+	assert(t, king.IsKing, "MakeMove promotion")
 }
 
 func TestBoard_CanBeCreatedFromFen(t *testing.T) {

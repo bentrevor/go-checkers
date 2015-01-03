@@ -18,6 +18,7 @@ func (c ConsoleInput) GetMove(board Board) Move {
 		// TODO
 	}
 
+	fmt.Println("input:  ", input)
 	move, errorMessage := MoveFromString(input[0 : len(input)-1])
 
 	if len(errorMessage) == 0 {

@@ -88,7 +88,9 @@ func (board *Board) MakeMove(move Move) {
 	if !foundPiece {
 		// TODO
 	} else {
-		newPiece := Piece{Color: piece.Color, Space: move.TargetSpace}
+		rank := move.TargetSpace.Rank
+		isKing := rank == 1 || rank == 8
+		newPiece := Piece{Color: piece.Color, Space: move.TargetSpace, IsKing: isKing}
 		board.PlacePiece(newPiece)
 		board.RemovePieceAtSpace(move.StartingSpace)
 

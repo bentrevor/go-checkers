@@ -6,7 +6,7 @@ import (
 	. "github.com/bentrevor/checkers/src"
 )
 
-const fakeInput = "c3 - d4"
+var fakeInput = "c3 - d4"
 
 var player1 = NewHumanPlayer(White)
 var player2 = NewHumanPlayer(Black)
@@ -14,7 +14,8 @@ var player2 = NewHumanPlayer(Black)
 var game = NewGame(player1, player2, MockOutput{})
 
 type MockPlayer struct {
-	color Color
+	color     Color
+	FakeInput string
 }
 
 type MockInput struct{}
@@ -26,8 +27,8 @@ func (MockInput) GetInput() (string, error) {
 
 func (MockOutput) PrintBoard(b Board) {}
 
-func (MockPlayer) GetMove(board Board) Move {
-	move, _ := MoveFromString(fakeInput)
+func (p MockPlayer) GetMove(board Board) Move {
+	move, _ := MoveFromString(p.FakeInput)
 	return move
 }
 
@@ -35,8 +36,8 @@ func (MockPlayer) Color() Color {
 	return White
 }
 
-func NewMockPlayer() Player {
-	return &MockPlayer{color: White}
+func NewMockPlayer(input string) Player {
+	return &MockPlayer{color: White, FakeInput: input}
 }
 
 func TestGame_WhiteGoesFirst(t *testing.T) {
@@ -46,7 +47,7 @@ func TestGame_WhiteGoesFirst(t *testing.T) {
 func TestGame_TogglesPlayers(t *testing.T) {
 	assertEquals(t, White, game.CurrentColor())
 
-	game.CurrentPlayer = NewMockPlayer()
+	game.CurrentPlayer = NewMockPlayer("c3 - d4")
 	game.Board = NewGameBoard()
 	game.NextTurn()
 
@@ -54,7 +55,7 @@ func TestGame_TogglesPlayers(t *testing.T) {
 }
 
 func TestGame_MakesMovesOnTheBoard(t *testing.T) {
-	game.CurrentPlayer = NewMockPlayer()
+	game.CurrentPlayer = NewMockPlayer("c3 - d4")
 
 	d4Piece, _ := game.Board.GetPieceAtSpace(D4)
 	c3Piece, _ := game.Board.GetPieceAtSpace(C3)
@@ -81,4 +82,15 @@ func TestGame_InitFromFen(t *testing.T) {
 
 	assertEquals(t, Black, game.CurrentColor())
 	assertEquals(t, 2, numPieces)
+}
+
+func TestGame_PromotesPiecesToKing(t *testing.T) {
+	game = NewGame(player1, player2, MockOutput{})
+	game.InitFromFen("4/4/4/4/b/4/3w/4 w")
+
+	game.CurrentPlayer = NewMockPlayer("g7 - f8")
+	game.NextTurn()
+
+	king, _ := game.Board.GetPieceAtSpace(F8)
+	assert(t, king.IsKing, "king is king yo")
 }

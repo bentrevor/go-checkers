@@ -138,7 +138,7 @@ func onBoard(space Space) bool {
 	rank := space.Rank
 	file := space.File
 
-	r := rank > 0 && rank < 8 &&
+	r := rank > 0 && rank <= 8 &&
 		file >= "a" && file <= "h"
 
 	return r
