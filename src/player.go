@@ -47,7 +47,7 @@ func (player *HumanPlayer) Color() Color {
 
 // TODO this is dumb
 func (player *RandomPlayer) GetMove(board Board, rules Rules) Move {
-	time.Sleep(2 * time.Second)
+	time.Sleep(1 * time.Second)
 	return player.MoveDecider.GetMove(board, rules, player.Color())
 }
 

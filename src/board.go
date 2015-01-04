@@ -2,6 +2,7 @@ package checkers
 
 import (
 	"fmt"
+	"log"
 	"strings"
 )
 
@@ -40,7 +41,7 @@ func (board *Board) MakeMove(move Move) {
 	movingPiece, foundPiece := board.GetPieceAtSpace(move.StartingSpace)
 
 	if !foundPiece {
-		panic(fmt.Sprintf("can't make that move: no piece at %s%d", move.StartingSpace.File, move.StartingSpace.Rank))
+		log.Fatal(fmt.Sprintf("can't make that move: no piece at %s%d", move.StartingSpace.File, move.StartingSpace.Rank))
 	} else {
 		rank := move.TargetSpace.Rank
 		isKing := (rank == 1 || rank == 8) || movingPiece.IsKing

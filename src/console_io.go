@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -11,10 +12,10 @@ type ConsoleInput struct{}
 type ConsoleOutput struct{}
 
 func (c ConsoleInput) GetMove(board Board, rules Rules, color Color) Move {
-	input, err := c.GetInput()
+	input, err := c.getInput()
 
 	if err != nil {
-		panic("there was an error getting the input")
+		log.Fatal("there was an error getting the input")
 	}
 
 	move, errorMessage := MoveFromString(input[0 : len(input)-1])
@@ -25,11 +26,6 @@ func (c ConsoleInput) GetMove(board Board, rules Rules, color Color) Move {
 		fmt.Println(errorMessage)
 		return c.GetMove(board, rules, color)
 	}
-}
-
-func (ConsoleInput) GetInput() (string, error) {
-	in := bufio.NewReader(os.Stdin)
-	return in.ReadString('\n')
 }
 
 func (ConsoleOutput) PrintBoard(board Board) {
@@ -63,4 +59,9 @@ func (ConsoleOutput) PrintBoard(board Board) {
 
 	fmt.Println(reverseRows(rows))
 	fmt.Println("  a  b  c  d  e  f  g  h")
+}
+
+func (ConsoleInput) getInput() (string, error) {
+	in := bufio.NewReader(os.Stdin)
+	return in.ReadString('\n')
 }

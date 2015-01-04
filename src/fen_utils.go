@@ -2,6 +2,7 @@ package checkers
 
 import (
 	"fmt"
+	"log"
 	"regexp"
 	"strings"
 )
@@ -75,7 +76,7 @@ func ExpandNumbers(row string) string {
 	matched, err := regexp.MatchString("[1234]", row)
 
 	if err != nil {
-		panic(fmt.Sprintf("couldn't match a string with row: %s", row))
+		log.Fatal(fmt.Sprintf("couldn't match a string with row: %s", row))
 	}
 
 	if matched {
