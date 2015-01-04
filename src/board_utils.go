@@ -5,6 +5,19 @@ import (
 	"strings"
 )
 
+func BlackSpaces() [][]Space {
+	return [][]Space{
+		[]Space{A1, C1, E1, G1},
+		[]Space{B2, D2, F2, H2},
+		[]Space{A3, C3, E3, G3},
+		[]Space{B4, D4, F4, H4},
+		[]Space{A5, C5, E5, G5},
+		[]Space{B6, D6, F6, H6},
+		[]Space{A7, C7, E7, G7},
+		[]Space{B8, D8, F8, H8},
+	}
+}
+
 func IncludesMove(moves []Move, move Move) bool {
 	for _, any_move := range moves {
 		if IsSameMove(move, any_move) {
@@ -44,20 +57,8 @@ func SpaceColorForIndex(index int) Color {
 }
 
 func GetNearSpaceInDirection(space Space, direction Direction) (Space, bool) {
-	nextRank := 0
-	nextFile := ""
-
-	if direction.increasingRank {
-		nextRank = space.Rank + 1
-	} else {
-		nextRank = space.Rank - 1
-	}
-
-	if direction.increasingFile {
-		nextFile = incFile(space.File)
-	} else {
-		nextFile = decFile(space.File)
-	}
+	nextRank := nextRankInDirection(space, direction)
+	nextFile := nextFileInDirection(space, direction)
 
 	nearSpace := Space{File: nextFile, Rank: nextRank}
 	if onBoard(nearSpace) {
@@ -88,35 +89,6 @@ func MoveFromString(input string) (Move, string) {
 			return Move{}, "enter real moves, dummy"
 		}
 	}
-}
-
-func getNextSpaceInSameDirection(startingSpace Space, targetSpace Space) Space {
-	increasingRank := startingSpace.Rank < targetSpace.Rank
-	increasingFile := startingSpace.File[0] < targetSpace.File[0]
-	nextRank := 0
-	nextFile := ""
-
-	if increasingRank {
-		nextRank = targetSpace.Rank + 1
-	} else {
-		nextRank = targetSpace.Rank - 1
-	}
-
-	if increasingFile {
-		nextFile = string(targetSpace.File[0] + 1)
-	} else {
-		nextFile = string(targetSpace.File[0] - 1)
-	}
-
-	return Space{File: nextFile, Rank: nextRank}
-}
-
-func onLeftEdge(space Space) bool {
-	return space.File == "a"
-}
-
-func onRightEdge(space Space) bool {
-	return space.File == "h"
 }
 
 func incFile(file string) string {
@@ -181,23 +153,6 @@ func fileBetween(file1 string, file2 string) string {
 	return string(captureFile)
 }
 
-func spacesForRank(rank int) []Space {
-	return BlackSpaces()[rank-1]
-}
-
-func BlackSpaces() [][]Space {
-	return [][]Space{
-		[]Space{A1, C1, E1, G1},
-		[]Space{B2, D2, F2, H2},
-		[]Space{A3, C3, E3, G3},
-		[]Space{B4, D4, F4, H4},
-		[]Space{A5, C5, E5, G5},
-		[]Space{B6, D6, F6, H6},
-		[]Space{A7, C7, E7, G7},
-		[]Space{B8, D8, F8, H8},
-	}
-}
-
 func getPieceAbbrev(piece Piece) string {
 	if piece.Color == NoColor {
 		return " "
@@ -209,5 +164,21 @@ func getPieceAbbrev(piece Piece) string {
 		} else {
 			return string(token)
 		}
+	}
+}
+
+func nextRankInDirection(space Space, direction Direction) int {
+	if direction.increasingRank {
+		return space.Rank + 1
+	} else {
+		return space.Rank - 1
+	}
+}
+
+func nextFileInDirection(space Space, direction Direction) string {
+	if direction.increasingFile {
+		return incFile(space.File)
+	} else {
+		return decFile(space.File)
 	}
 }

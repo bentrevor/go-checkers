@@ -21,6 +21,22 @@ func (board Board) MovesForPiece(piece Piece) []Move {
 	return board.MovesForSpace(piece.Space)
 }
 
+func IsLegalMove(move Move, board Board, color Color) bool {
+	piece, foundPiece := board.GetPieceAtSpace(move.StartingSpace)
+
+	if !foundPiece || piece.Color != color {
+		return false
+	} else {
+		moves := board.MovesForPiece(piece)
+
+		if IncludesMove(moves, move) {
+			return true
+		} else {
+			return false
+		}
+	}
+}
+
 func (board Board) IsGameOver() bool {
 	blackPieceCount := board.countPiecesByColor(Black)
 	whitePieceCount := board.countPiecesByColor(White)
@@ -102,82 +118,6 @@ func (board Board) oppositeColorOnNearSpace(direction Direction, space Space) bo
 	}
 
 	return false
-}
-
-func movesFor(board Board, startingSpace Space, nextRank int) []Move {
-	moves := []Move{}
-
-	if leftMove, ok := tryLeftMove(board, startingSpace, nextRank); ok {
-		moves = append(moves, leftMove)
-	}
-
-	if rightMove, ok := tryRightMove(board, startingSpace, nextRank); ok {
-
-		moves = append(moves, rightMove)
-	}
-
-	return moves
-}
-
-func IsLegalMove(move Move, board Board, color Color) bool {
-	piece, foundPiece := board.GetPieceAtSpace(move.StartingSpace)
-
-	if !foundPiece || piece.Color != color {
-		return false
-	} else {
-		moves := board.MovesForPiece(piece)
-
-		if IncludesMove(moves, move) {
-			return true
-		} else {
-			return false
-		}
-	}
-}
-
-func tryLeftMove(board Board, startingSpace Space, nextRank int) (Move, bool) {
-	if !onLeftEdge(startingSpace) {
-		leftFile := decFile(startingSpace.File)
-		targetSpace := Space{File: leftFile, Rank: nextRank}
-
-		if nextMove, ok := getNextMove(startingSpace, targetSpace, board); ok {
-			return nextMove, true
-		}
-	}
-
-	return Move{}, false
-}
-
-func tryRightMove(board Board, startingSpace Space, nextRank int) (Move, bool) {
-	if !onRightEdge(startingSpace) {
-		rightFile := incFile(startingSpace.File)
-		targetSpace := Space{File: rightFile, Rank: nextRank}
-
-		if nextMove, ok := getNextMove(startingSpace, targetSpace, board); ok {
-			return nextMove, true
-		}
-	}
-
-	return Move{}, false
-}
-
-func getNextMove(startingSpace Space, targetSpace Space, board Board) (Move, bool) {
-	_, pieceAtTargetSpace := board.GetPieceAtSpace(targetSpace)
-
-	if !pieceAtTargetSpace {
-		move := Move{StartingSpace: startingSpace, TargetSpace: targetSpace}
-		return move, true
-	} else {
-		nextSpace := getNextSpaceInSameDirection(startingSpace, targetSpace)
-		_, pieceAtNextSpace := board.GetPieceAtSpace(nextSpace)
-
-		if !pieceAtNextSpace {
-			move := Move{StartingSpace: startingSpace, TargetSpace: nextSpace}
-			return move, true
-		} else {
-			return Move{}, false
-		}
-	}
 }
 
 func (board Board) countPiecesByColor(color Color) int {
