@@ -1,6 +1,9 @@
 package checkers
 
-import "math"
+import (
+	"math"
+	"strings"
+)
 
 func IncludesMove(moves []Move, move Move) bool {
 	for _, any_move := range moves {
@@ -179,7 +182,11 @@ func fileBetween(file1 string, file2 string) string {
 }
 
 func spacesForRank(rank int) []Space {
-	spaces := [][]Space{
+	return BlackSpaces()[rank-1]
+}
+
+func BlackSpaces() [][]Space {
+	return [][]Space{
 		[]Space{A1, C1, E1, G1},
 		[]Space{B2, D2, F2, H2},
 		[]Space{A3, C3, E3, G3},
@@ -189,6 +196,18 @@ func spacesForRank(rank int) []Space {
 		[]Space{A7, C7, E7, G7},
 		[]Space{B8, D8, F8, H8},
 	}
+}
 
-	return spaces[rank-1]
+func getPieceAbbrev(piece Piece) string {
+	if piece.Color == NoColor {
+		return " "
+	} else {
+		token := string(piece.Color[0])
+
+		if piece.IsKing {
+			return string(strings.ToUpper(string(token)))
+		} else {
+			return string(token)
+		}
+	}
 }

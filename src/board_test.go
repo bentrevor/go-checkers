@@ -129,3 +129,9 @@ func TestBoard_CanExpandAFenRow(t *testing.T) {
 	assertEquals(t, len(expandedRow), 4)
 	assertEquals(t, expandedRow, "111w")
 }
+
+func TestBoard_CanExportPiecesAsFen(t *testing.T) {
+	board := NewGameBoard()
+
+	assertEquals(t, board.PiecesToFen(), "wwww/wwww/wwww/4/4/bbbb/bbbb/bbbb")
+}

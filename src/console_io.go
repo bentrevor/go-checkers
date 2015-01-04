@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"fmt"
 	"os"
-	"strings"
 )
 
 type ConsoleInput struct{}
@@ -64,14 +63,4 @@ func (ConsoleOutput) PrintBoard(board Board) {
 
 	fmt.Println(reverseRows(rows))
 	fmt.Println("  a  b  c  d  e  f  g  h")
-}
-
-func getPieceAbbrev(piece Piece) string {
-	token := string(piece.Color[0])
-
-	if piece.IsKing {
-		return string(strings.ToUpper(string(token)))
-	} else {
-		return string(token)
-	}
 }

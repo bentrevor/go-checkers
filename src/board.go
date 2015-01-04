@@ -51,8 +51,32 @@ func BoardFromFen(fen string) Board {
 	return board
 }
 
-func getRowPieces(fenRow string) []string {
-	return strings.Split(ExpandNumbers(fenRow), "")
+func (board Board) PiecesToFen() string {
+	piecesFen := ""
+
+	rows := BlackSpaces()
+
+	for i, row := range rows {
+		for _, space := range row {
+			piece, _ := board.GetPieceAtSpace(space)
+			abbrev := getPieceAbbrev(piece)
+			piecesFen += abbrev
+		}
+
+		if i < len(rows)-1 {
+			piecesFen += "/"
+		}
+	}
+
+	return compactSpaces(piecesFen)
+}
+
+func compactSpaces(piecesFen string) string {
+	with4s := strings.Replace(piecesFen, "    ", "4", 8)
+	with3s := strings.Replace(with4s, "   ", "3", 8)
+	with2s := strings.Replace(with3s, "  ", "2", 8)
+
+	return strings.Replace(with2s, " ", "1", 20)
 }
 
 func ExpandNumbers(row string) string {
@@ -168,4 +192,8 @@ func initialPieceAtIndex(index int) (Piece, bool) {
 
 func (board *Board) addPiece(piece Piece) {
 	board.Pieces = append(board.Pieces, piece)
+}
+
+func getRowPieces(fenRow string) []string {
+	return strings.Split(ExpandNumbers(fenRow), "")
 }
