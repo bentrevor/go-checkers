@@ -60,9 +60,9 @@ func TestRules_CanGetAMoveInASingleDirection(t *testing.T) {
 	swMove, _ := board.TryMove(G3, Southwest)
 	_, madeSoutheastMove := board.TryMove(G3, Southeast)
 
-	actualNwMove, _ := MoveFromString("g3 - e5")
-	actualNeMove, _ := MoveFromString("g3 - h4")
-	actualSwMove, _ := MoveFromString("g3 - f2")
+	actualNwMove, _ := MoveFromString("g3e5")
+	actualNeMove, _ := MoveFromString("g3h4")
+	actualSwMove, _ := MoveFromString("g3f2")
 
 	assert(t, IsSameMove(nwMove, actualNwMove), "TryMove - capture move (nw)")
 	assert(t, IsSameMove(neMove, actualNeMove), "TryMove - non-capture move (ne)")
@@ -114,7 +114,7 @@ func TestRules_KnowsWhenAMoveIsInvalid(t *testing.T) {
 }
 
 func TestRules_ConvertsStringToMove(t *testing.T) {
-	input := "a3 - b4"
+	input := "a3b4"
 	move := Move{StartingSpace: A3, TargetSpace: B4}
 
 	parsedMove, _ := MoveFromString(input)
@@ -125,7 +125,7 @@ func TestRules_ValidatesInputFormat(t *testing.T) {
 	_, wrongLengthErrorMessage := MoveFromString("a3-b4")
 	assert(t, (len(wrongLengthErrorMessage) > 0), "invalid move from string - wrong input length")
 
-	_, nonsenseInputErrorMessage := MoveFromString("xx - yy")
+	_, nonsenseInputErrorMessage := MoveFromString("xxyy")
 	assert(t, (len(nonsenseInputErrorMessage) > 0), "invalid move from string - garbage input")
 }
 

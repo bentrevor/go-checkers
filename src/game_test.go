@@ -6,7 +6,7 @@ import (
 	. "github.com/bentrevor/checkers/src"
 )
 
-var fakeInput = "c3 - d4"
+var fakeInput = "c3d4"
 
 var player1 = NewHumanPlayer(White)
 var player2 = NewHumanPlayer(Black)
@@ -52,7 +52,7 @@ func TestGame_WhiteGoesFirst(t *testing.T) {
 func TestGame_TogglesPlayers(t *testing.T) {
 	game := NewGameWithMockPlayers()
 
-	game.CurrentPlayer = NewMockPlayer("c3 - d4")
+	game.CurrentPlayer = NewMockPlayer("c3d4")
 	game.Board = NewGameBoard()
 	game.NextTurn()
 
@@ -61,7 +61,7 @@ func TestGame_TogglesPlayers(t *testing.T) {
 
 func TestGame_MakesMovesOnTheBoard(t *testing.T) {
 	game := NewGameWithMockPlayers()
-	game.CurrentPlayer = NewMockPlayer("c3 - d4")
+	game.CurrentPlayer = NewMockPlayer("c3d4")
 
 	d4Piece, _ := game.Board.GetPieceAtSpace(D4)
 	c3Piece, _ := game.Board.GetPieceAtSpace(C3)
@@ -72,7 +72,7 @@ func TestGame_MakesMovesOnTheBoard(t *testing.T) {
 
 func TestGame_OnlyMakesValidMoves(t *testing.T) {
 	game := NewGameWithMockPlayers()
-	game.CurrentPlayer = NewMockPlayer("b4 - c5", "a3 - b4")
+	game.CurrentPlayer = NewMockPlayer("b4c5", "a3b4")
 
 	game.NextTurn()
 	b4Piece, _ := game.Board.GetPieceAtSpace(B4)
@@ -85,7 +85,7 @@ func TestGame_PromotesPiecesToKing(t *testing.T) {
 	game := NewGameWithMockPlayers()
 	game.InitFromFen("4/4/4/4/b/4/3w/4 w")
 
-	game.CurrentPlayer = NewMockPlayer("g7 - f8")
+	game.CurrentPlayer = NewMockPlayer("g7f8")
 	game.NextTurn()
 
 	king, _ := game.Board.GetPieceAtSpace(F8)

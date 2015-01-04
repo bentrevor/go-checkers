@@ -77,11 +77,13 @@ func GetFarSpaceInDirection(space Space, direction Direction) (Space, bool) {
 }
 
 func MoveFromString(input string) (Move, string) {
-	if len(input) != 7 {
-		return Move{}, "wrong length: enter a move like 'c3 - d4'"
+	length := len(input)
+
+	if length != 4 {
+		return Move{}, "wrong length: enter a move like 'c3d4'"
 	} else {
 		startingSpace := NewSpace(input[0:2])
-		targetSpace := NewSpace(input[5:7])
+		targetSpace := NewSpace(input[length-2 : length])
 
 		if onBoard(startingSpace) && onBoard(targetSpace) {
 			return Move{StartingSpace: startingSpace, TargetSpace: targetSpace}, ""

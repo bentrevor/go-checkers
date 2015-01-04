@@ -55,7 +55,7 @@ func TestBoard_CanMakeMoves(t *testing.T) {
 	board.PlacePiece(whitePiece)
 	board.PlacePiece(whitePiece2)
 
-	move, _ := MoveFromString("g3 - h4")
+	move, _ := MoveFromString("g3h4")
 
 	board.MakeMove(move)
 
@@ -68,7 +68,7 @@ func TestBoard_CanMakeMoves(t *testing.T) {
 	blackPiece := Piece{Color: Black, Space: G5}
 	board.PlacePiece(blackPiece)
 
-	captureMove, _ := MoveFromString("h4 - f6")
+	captureMove, _ := MoveFromString("h4f6")
 	board.MakeMove(captureMove)
 
 	g5Piece, _ := board.GetPieceAtSpace(G5)
@@ -81,13 +81,13 @@ func TestBoard_CanPromotePieces(t *testing.T) {
 	whitePiece := Piece{Color: White, Space: C7}
 	board.PlacePiece(whitePiece)
 
-	promotionMove, _ := MoveFromString("c7 - d8")
+	promotionMove, _ := MoveFromString("c7d8")
 	board.MakeMove(promotionMove)
 	king, _ := board.GetPieceAtSpace(D8)
 
 	assert(t, king.IsKing, "MakeMove promotion")
 
-	backwardsMove, _ := MoveFromString("d8 - e7")
+	backwardsMove, _ := MoveFromString("d8e7")
 	board.MakeMove(backwardsMove)
 	king, _ = board.GetPieceAtSpace(E7)
 	assert(t, king.IsKing, "king stays a king")
