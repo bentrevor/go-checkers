@@ -34,19 +34,12 @@ func (game *Game) NextTurn() {
 	game.Output.PrintBoard(game.Board)
 
 	move := game.CurrentPlayer.GetMove(game.Board)
-	for !game.IsValidMove(move) {
+	for !game.Rules.IsLegalMove(move, game.Board, game.CurrentColor()) {
 		move = game.CurrentPlayer.GetMove(game.Board)
 	}
 
 	game.Board.MakeMove(move)
 	game.togglePlayers()
-}
-
-func (game *Game) IsValidMove(move Move) bool {
-	board := game.Board
-	color := game.CurrentPlayer.Color()
-
-	return game.Rules.IsLegalMove(move, board, color)
 }
 
 func (game *Game) Start() {

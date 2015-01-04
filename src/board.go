@@ -26,6 +26,7 @@ func NewGameBoard() Board {
 }
 
 func (board *Board) GetPieceAtSpace(space Space) (Piece, bool) {
+	// TODO board.Pieces should be a map from Space => Piece
 	for _, piece := range board.Pieces {
 		if IsSameSpace(piece.Space, space) {
 			return piece, true

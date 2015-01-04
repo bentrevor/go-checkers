@@ -16,8 +16,9 @@ func NewGameWithMockPlayers() Game {
 }
 
 type MockPlayer struct {
-	color     Color
-	FakeInput string
+	color             Color
+	FakeInputs        []string
+	currentInputIndex int
 }
 
 type MockInput struct{}
@@ -29,8 +30,9 @@ func (MockInput) GetInput() (string, error) {
 
 func (MockOutput) PrintBoard(b Board) {}
 
-func (p MockPlayer) GetMove(board Board) Move {
-	move, _ := MoveFromString(p.FakeInput)
+func (p *MockPlayer) GetMove(board Board) Move {
+	move, _ := MoveFromString(p.FakeInputs[p.currentInputIndex])
+	p.currentInputIndex += 1
 	return move
 }
 
@@ -38,8 +40,8 @@ func (MockPlayer) Color() Color {
 	return White
 }
 
-func NewMockPlayer(input string) Player {
-	return &MockPlayer{color: White, FakeInput: input}
+func NewMockPlayer(inputs ...string) Player {
+	return &MockPlayer{color: White, FakeInputs: inputs}
 }
 
 func TestGame_WhiteGoesFirst(t *testing.T) {
@@ -68,9 +70,15 @@ func TestGame_MakesMovesOnTheBoard(t *testing.T) {
 	assertEquals(t, White, c3Piece.Color)
 }
 
-func TestGame_ValidatesMoves(t *testing.T) {
+func TestGame_OnlyMakesValidMoves(t *testing.T) {
 	game := NewGameWithMockPlayers()
-	assert(t, !game.IsValidMove(Move{B4, C5}), "invalid move - no piece at starting space")
+	game.CurrentPlayer = NewMockPlayer("b4 - c5", "a3 - b4")
+
+	game.NextTurn()
+	b4Piece, _ := game.Board.GetPieceAtSpace(B4)
+
+	assertEquals(t, Black, game.CurrentColor())
+	assertEquals(t, White, b4Piece.Color)
 }
 
 func TestGame_PromotesPiecesToKing(t *testing.T) {
