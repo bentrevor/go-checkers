@@ -7,6 +7,7 @@ type Game struct {
 	CurrentPlayer Player
 	OtherPlayer   Player
 	Output        Output
+	Rules         Rules
 }
 
 type Input interface {
@@ -25,6 +26,7 @@ func NewGame(player1 Player, player2 Player, output Output) Game {
 		CurrentPlayer: player1,
 		OtherPlayer:   player2,
 		Output:        output,
+		Rules:         CheckersRules{},
 	}
 }
 
@@ -44,11 +46,11 @@ func (game *Game) IsValidMove(move Move) bool {
 	board := game.Board
 	color := game.CurrentPlayer.Color()
 
-	return IsLegalMove(move, board, color)
+	return game.Rules.IsLegalMove(move, board, color)
 }
 
 func (game *Game) Start() {
-	for !game.Board.IsGameOver() {
+	for !game.Rules.IsGameOver(game.Board) {
 		game.NextTurn()
 	}
 

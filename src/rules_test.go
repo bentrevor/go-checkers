@@ -6,6 +6,8 @@ import (
 	. "github.com/bentrevor/checkers/src"
 )
 
+var rules = CheckersRules{}
+
 func TestRules_KnowsWhereAPieceCanMove(t *testing.T) {
 	board := NewGameBoard()
 	whitePiece, _ := board.GetPieceAtSpace(G3)
@@ -20,8 +22,8 @@ func TestRules_KnowsWhereAPieceCanMove(t *testing.T) {
 		Move{StartingSpace: H6, TargetSpace: G5},
 	}
 
-	assertEquals(t, whiteMoves, board.MovesForPiece(whitePiece))
-	assertEquals(t, blackMoves, board.MovesForPiece(blackPiece))
+	assertEquals(t, whiteMoves, rules.MovesForPiece(whitePiece, board))
+	assertEquals(t, blackMoves, rules.MovesForPiece(blackPiece, board))
 }
 
 func TestRules_KnowsWhereAKingCanMove(t *testing.T) {
@@ -35,7 +37,7 @@ func TestRules_KnowsWhereAKingCanMove(t *testing.T) {
 	swMove := Move{StartingSpace: E3, TargetSpace: D2}
 	seMove := Move{StartingSpace: E3, TargetSpace: F2}
 
-	kingMoves := board.MovesForSpace(E3)
+	kingMoves := rules.MovesForSpace(E3, board)
 
 	assert(t, IncludesMove(kingMoves, neMove), "king moves: e3 - f4")
 	assert(t, IncludesMove(kingMoves, nwMove), "king moves: e3 - d4")
@@ -74,8 +76,8 @@ func TestRules_KnowsWhereAPieceCanJump(t *testing.T) {
 
 	board.PlacePiece(Piece{Color: White, Space: E5})
 
-	d6Moves := board.MovesForPiece(d6Piece)
-	f6Moves := board.MovesForPiece(f6Piece)
+	d6Moves := rules.MovesForPiece(d6Piece, board)
+	f6Moves := rules.MovesForPiece(f6Piece, board)
 
 	captureMoveForD6 := Move{StartingSpace: D6, TargetSpace: F4}
 	captureMoveForF6 := Move{StartingSpace: F6, TargetSpace: D4}
@@ -86,29 +88,29 @@ func TestRules_KnowsWhereAPieceCanJump(t *testing.T) {
 
 func TestRules_KnowsWhenAMoveIsValid(t *testing.T) {
 	move := Move{StartingSpace: A3, TargetSpace: B4}
-	assert(t, IsLegalMove(move, board, White), "valid white noncapture move")
+	assert(t, rules.IsLegalMove(move, board, White), "valid white noncapture move")
 
 	move = Move{StartingSpace: B6, TargetSpace: C5}
-	assert(t, IsLegalMove(move, board, Black), "valid black noncapture move")
+	assert(t, rules.IsLegalMove(move, board, Black), "valid black noncapture move")
 
 	board.PlacePiece(Piece{Color: Black, Space: F4})
 	move = Move{StartingSpace: E3, TargetSpace: G5}
-	assert(t, IsLegalMove(move, board, White), "valid white capture move")
+	assert(t, rules.IsLegalMove(move, board, White), "valid white capture move")
 }
 
 func TestRules_KnowsWhenAMoveIsInvalid(t *testing.T) {
 	move := Move{StartingSpace: A3, TargetSpace: B4}
-	assert(t, !IsLegalMove(move, board, Black), "invalid black move - wrong color")
+	assert(t, !rules.IsLegalMove(move, board, Black), "invalid black move - wrong color")
 
 	move = Move{StartingSpace: A3, TargetSpace: A3}
-	assert(t, !IsLegalMove(move, board, White), "invalid white move - not a real move")
+	assert(t, !rules.IsLegalMove(move, board, White), "invalid white move - not a real move")
 
 	board.PlacePiece(Piece{Color: Black, Space: F4})
 	move = Move{StartingSpace: E3, TargetSpace: F4}
-	assert(t, !IsLegalMove(move, board, White), "invalid white move - moving into an occupied square")
+	assert(t, !rules.IsLegalMove(move, board, White), "invalid white move - moving into an occupied square")
 
 	move = Move{StartingSpace: F4, TargetSpace: E3}
-	assert(t, !IsLegalMove(move, board, Black), "invalid black move - moving into an occupied square")
+	assert(t, !rules.IsLegalMove(move, board, Black), "invalid black move - moving into an occupied square")
 }
 
 func TestRules_ConvertsStringToMove(t *testing.T) {
@@ -135,9 +137,9 @@ func TestRules_KnowsGameOver(t *testing.T) {
 	board.PlacePiece(whitePiece)
 	board.PlacePiece(blackPiece)
 
-	assert(t, !board.IsGameOver(), "game over - game not over yet")
+	assert(t, !rules.IsGameOver(board), "game over - game not over yet")
 
 	board.RemovePieceAtSpace(G3)
 
-	assert(t, board.IsGameOver(), "game over - game is over after no more white pieces")
+	assert(t, rules.IsGameOver(board), "game over - game is over after no more white pieces")
 }

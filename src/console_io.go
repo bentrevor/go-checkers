@@ -14,7 +14,7 @@ func (c ConsoleInput) GetMove(board Board) Move {
 	input, err := c.GetInput()
 
 	if err != nil {
-		// TODO
+		panic("there was an error getting the input")
 	}
 
 	move, errorMessage := MoveFromString(input[0 : len(input)-1])

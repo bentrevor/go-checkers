@@ -1,5 +1,13 @@
 package checkers
 
+type Rules interface {
+	MovesForPiece(Piece, Board) []Move
+	MovesForSpace(Space, Board) []Move
+	IsLegalMove(Move, Board, Color) bool
+	IsGameOver(Board) bool
+}
+type CheckersRules struct{}
+
 type Move struct {
 	StartingSpace Space
 	TargetSpace   Space
@@ -17,17 +25,17 @@ var (
 	Southeast Direction = Direction{increasingFile: true, increasingRank: false}
 )
 
-func (board Board) MovesForPiece(piece Piece) []Move {
-	return board.MovesForSpace(piece.Space)
+func (rules CheckersRules) MovesForPiece(piece Piece, board Board) []Move {
+	return rules.MovesForSpace(piece.Space, board)
 }
 
-func IsLegalMove(move Move, board Board, color Color) bool {
+func (rules CheckersRules) IsLegalMove(move Move, board Board, color Color) bool {
 	piece, foundPiece := board.GetPieceAtSpace(move.StartingSpace)
 
 	if !foundPiece || piece.Color != color {
 		return false
 	} else {
-		moves := board.MovesForPiece(piece)
+		moves := rules.MovesForPiece(piece, board)
 
 		if IncludesMove(moves, move) {
 			return true
@@ -37,19 +45,19 @@ func IsLegalMove(move Move, board Board, color Color) bool {
 	}
 }
 
-func (board Board) IsGameOver() bool {
+func (CheckersRules) IsGameOver(board Board) bool {
 	blackPieceCount := board.countPiecesByColor(Black)
 	whitePieceCount := board.countPiecesByColor(White)
 
 	return whitePieceCount == 0 || blackPieceCount == 0
 }
 
-func (board Board) MovesForSpace(startingSpace Space) []Move {
+func (CheckersRules) MovesForSpace(space Space, board Board) []Move {
 	var moves []Move
 	directions := []Direction{Northwest, Northeast, Southeast, Southwest}
 
 	for _, direction := range directions {
-		if move, moveCreated := board.TryMove(startingSpace, direction); moveCreated {
+		if move, moveCreated := board.TryMove(space, direction); moveCreated {
 			moves = append(moves, move)
 		}
 	}

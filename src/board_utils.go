@@ -113,10 +113,8 @@ func onBoard(space Space) bool {
 	rank := space.Rank
 	file := space.File
 
-	r := rank > 0 && rank <= 8 &&
+	return rank > 0 && rank <= 8 &&
 		file >= "a" && file <= "h"
-
-	return r
 }
 
 func getOddAndEvenColor(index int) (Color, Color) {
@@ -132,7 +130,7 @@ func getOddAndEvenColor(index int) (Color, Color) {
 func isCaptureMove(move Move) bool {
 	rankDelta := math.Abs(float64(move.StartingSpace.Rank - move.TargetSpace.Rank))
 
-	// going to have to fix this for double jumps
+	// TODO going to have to fix this for double jumps
 	return rankDelta > 1
 }
 
