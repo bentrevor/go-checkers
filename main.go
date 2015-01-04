@@ -18,7 +18,7 @@ func init() {
 
 func main() {
 	player1 := NewHumanPlayer("white")
-	player2 := NewHumanPlayer("black")
+	player2 := NewRandomPlayer("black")
 	game := NewGame(player1, player2, ConsoleOutput{})
 
 	if len(flagFen) > 0 {

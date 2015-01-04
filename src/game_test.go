@@ -30,7 +30,7 @@ func (MockInput) GetInput() (string, error) {
 
 func (MockOutput) PrintBoard(b Board) {}
 
-func (p *MockPlayer) GetMove(board Board) Move {
+func (p *MockPlayer) GetMove(board Board, rules Rules) Move {
 	move, _ := MoveFromString(p.FakeInputs[p.currentInputIndex])
 	p.currentInputIndex += 1
 	return move

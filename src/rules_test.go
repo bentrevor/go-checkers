@@ -12,6 +12,7 @@ func TestRules_KnowsWhereAPieceCanMove(t *testing.T) {
 	board := NewGameBoard()
 	whitePiece, _ := board.GetPieceAtSpace(G3)
 	blackPiece, _ := board.GetPieceAtSpace(H6)
+	whitePieceWithoutMoves, _ := board.GetPieceAtSpace(F2)
 
 	whiteMoves := []Move{
 		Move{StartingSpace: G3, TargetSpace: F4},
@@ -24,6 +25,9 @@ func TestRules_KnowsWhereAPieceCanMove(t *testing.T) {
 
 	assertEquals(t, whiteMoves, rules.MovesForPiece(whitePiece, board))
 	assertEquals(t, blackMoves, rules.MovesForPiece(blackPiece, board))
+	// this isn't working for some reason...
+	// assertEquals(t, []Move{}, rules.MovesForPiece(whitePieceWithoutMoves, board))
+	assertEquals(t, 0, len(rules.MovesForPiece(whitePieceWithoutMoves, board)))
 }
 
 func TestRules_KnowsWhereAKingCanMove(t *testing.T) {

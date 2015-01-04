@@ -33,9 +33,9 @@ func NewGame(player1 Player, player2 Player, output Output) Game {
 func (game *Game) NextTurn() {
 	game.Output.PrintBoard(game.Board)
 
-	move := game.CurrentPlayer.GetMove(game.Board)
+	move := game.CurrentPlayer.GetMove(game.Board, game.Rules)
 	for !game.Rules.IsLegalMove(move, game.Board, game.CurrentColor()) {
-		move = game.CurrentPlayer.GetMove(game.Board)
+		move = game.CurrentPlayer.GetMove(game.Board, game.Rules)
 	}
 
 	game.Board.MakeMove(move)

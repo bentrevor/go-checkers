@@ -10,7 +10,7 @@ import (
 type ConsoleInput struct{}
 type ConsoleOutput struct{}
 
-func (c ConsoleInput) GetMove(board Board) Move {
+func (c ConsoleInput) GetMove(board Board, rules Rules, color Color) Move {
 	input, err := c.GetInput()
 
 	if err != nil {
@@ -23,7 +23,7 @@ func (c ConsoleInput) GetMove(board Board) Move {
 		return move
 	} else {
 		fmt.Println(errorMessage)
-		return c.GetMove(board)
+		return c.GetMove(board, rules, color)
 	}
 }
 
